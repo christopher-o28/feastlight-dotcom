@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'DM Sans', sans-serif;
+  }
+  
+  body {
+    @apply bg-white text-feast-charcoal overflow-x-hidden;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-feast-red text-white px-6 py-3 rounded-full font-semibold text-sm
+           flex items-center gap-2 transition-all duration-300
+           hover:bg-feast-red-dark hover:-translate-y-0.5
+           hover:shadow-[0_8px_28px_rgba(255,75,75,0.4)];
+  }
+
+  .btn-outline-red {
+    @apply border-[1.5px] border-feast-red text-feast-red px-6 py-3 rounded-full
+           font-semibold text-sm flex items-center gap-2 transition-all duration-300
+           hover:bg-feast-red-light hover:-translate-y-0.5;
+  }
+
+  .btn-outline-white {
+    @apply border-[1.5px] border-white/40 text-white px-6 py-3 rounded-full
+           font-semibold text-sm flex items-center gap-2 transition-all duration-300
+           hover:border-white hover:bg-white/10 hover:-translate-y-0.5;
+  }
+
+  .section-label {
+    @apply text-feast-red text-xs font-bold tracking-[0.2em] uppercase mb-2;
+  }
+
+  .section-title {
+    @apply font-display text-3xl md:text-4xl lg:text-5xl font-black text-feast-dark leading-tight;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(255,75,75,0.18)];
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #FF4B4B; border-radius: 3px; }
