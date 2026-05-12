@@ -33,7 +33,12 @@ export default function CTASection({ cta }) {
             </h2>
             <p className="text-white/60 leading-relaxed text-[0.95rem] mb-10 max-w-md">{body}</p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <a href="https://tally.so/r/wdjq5o" className="btn-primary px-6 py-3.5">
+              <a href="https://tally.so/r/wdjq5o" 
+                  className="btn-primary px-6 py-3.5"
+                  target="_blank"
+                  rel="noopener noreferrer"
+              >
+              
                 <PlusCircle size={17} /> Build a Feast Light Today
               </a>
               <a
@@ -41,6 +46,9 @@ export default function CTASection({ cta }) {
                 className="border-[1.5px] border-white/25 text-white/80 px-6 py-3.5 rounded-full
                            font-semibold text-sm flex items-center gap-2 transition-all duration-300
                            hover:border-white hover:bg-white/10 hover:-translate-y-0.5"
+                target="_blank"
+                rel="noopener noreferrer"
+                
               >
                 <Edit size={15} /> Update Your Feast Light Info
               </a>

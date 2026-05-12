@@ -45,7 +45,10 @@ export default function FulltankSection({ fulltank }) {
             <div className="section-label">Inspirational Video</div>
             <h2 className="font-display text-5xl font-black text-feast-dark mb-6">{title}</h2>
             <p className="text-gray-500 leading-relaxed text-[0.95rem] mb-4">{description}</p>
-            <a href={viewMoreUrl} className="btn-primary mt-6 px-6 py-3 w-60 flex items-center justify-center gap-2">
+            <a href={viewMoreUrl} className="btn-primary mt-6 px-6 py-3 w-60 flex items-center justify-center gap-2"
+               target="_blank"
+               rel="noopener noreferrer"
+            >
               View More <ArrowRight size={16} />
             </a>
           </AnimatedSection>

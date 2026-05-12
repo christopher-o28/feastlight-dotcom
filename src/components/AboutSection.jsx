@@ -6,7 +6,6 @@ import AnimatedSection, { StaggerChildren, StaggerItem } from './AnimatedSection
 function InfoCard({ card, isTopCard }) {
   const { title, body, style = 'light' } = card
 
-  // First two cards (What is The Feast Light and Goodness & Hope) have matching responsive height
   const heightClass = isTopCard ? 'min-h-96 sm:min-h-[26rem] lg:min-h-[28rem]' : 'min-h-80 sm:min-h-96 lg:min-h-[28rem]'
   const baseClass = `rounded-2xl p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(255,75,75,0.18)] relative overflow-hidden ${heightClass} flex flex-col`
 
@@ -19,19 +18,11 @@ function InfoCard({ card, isTopCard }) {
 
   return (
     <div className={s.wrapper}>
-    
       {/* Title */}
       <h3 className={`font-display text-lg sm:text-xl lg:text-[1.3rem] font-bold ${s.titleColor} mb-2 sm:mb-3 leading-snug flex-shrink-0`}>{title}</h3>
 
       {/* Body */}
       <p className={`text-xs sm:text-sm leading-relaxed ${s.bodyColor} flex-grow`}>{body}</p>
-
-      {/* For light card: link */}
-      {style === 'light' && (
-        <button className="btn-primary mt-4 sm:mt-6 text-xs px-4 py-2 flex-shrink-0 self-start">
-          Learn More <ArrowRight size={13} />
-        </button>
-      )}
     </div>
   )
 }
@@ -39,9 +30,6 @@ function InfoCard({ card, isTopCard }) {
 export default function AboutSection({ cards }) {
   const displayCards = cards?.slice(0, 4) || []
   
-  // Reorder cards: Move "Goodness & Hope" up and "Our Mission" down
-  // Original order: [What is The Feast Light, Our Mission, Our Vision, Goodness & Hope]
-  // New order: [What is The Feast Light, Goodness & Hope, Our Vision, Our Mission]
   const reorderedCards = displayCards.length >= 4
     ? [displayCards[0], displayCards[3], displayCards[2], displayCards[1]]
     : displayCards

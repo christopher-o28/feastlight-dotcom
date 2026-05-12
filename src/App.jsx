@@ -15,7 +15,7 @@ import Footer from './components/Footer'
 import LoadingScreen from './components/LoadingScreen'
 import CMSBanner from './components/CMSBanner'
 import FAQSection from './components/FAQSection'
-import FeastLightChatbot from './components/FeastLightChatbot'
+
 
 
 export default function App() {
@@ -39,9 +39,6 @@ export default function App() {
     <div className="min-h-screen font-body">
       {/* CMS Status Banner */}
       <CMSBanner error={error} lastUpdated={lastUpdated} />
-
-      {/* Chatbot */}
-      <FeastLightChatbot />
 
       {/* Top Contact Bar */}
       <TopBar settings={siteSettings} />

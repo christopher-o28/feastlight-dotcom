@@ -1,18 +1,9 @@
 import { useState } from 'react'
-import { ChevronDown, Send } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import AnimatedSection from './AnimatedSection'
-import { useSubmitFAQ } from '../hooks/useSubmitFAQ'
 
 export default function FAQSection() {
   const [openFAQ, setOpenFAQ] = useState(null)
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    concern: '',
-    question: ''
-  })
-  const [submitted, setSubmitted] = useState(false)
-  const { submitFAQ, loading } = useSubmitFAQ()
 
   const faqs = [
     {
@@ -44,29 +35,6 @@ export default function FAQSection() {
 
   const toggleFAQ = (id) => {
     setOpenFAQ(openFAQ === id ? null : id)
-  }
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    
-    // Submit to Google Sheets
-    const result = await submitFAQ(formData)
-    
-    if (result.success) {
-      setSubmitted(true)
-      setFormData({ name: '', email: '', concern: '', question: '' })
-      
-      // Reset success message after 3 seconds
-      setTimeout(() => setSubmitted(false), 3000)
-    }
   }
 
   return (
@@ -108,109 +76,6 @@ export default function FAQSection() {
                 )}
               </div>
             ))}
-          </div>
-        </AnimatedSection>
-
-        {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-12" />
-
-        {/* Ask a Question Form */}
-        <AnimatedSection delay={0.2}>
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
-            <h3 className="font-display text-2xl font-black text-white mb-6">
-              Didn't find your answer?
-            </h3>
-            
-            {submitted ? (
-              <div className="bg-feast-red/20 border border-feast-red/50 rounded-lg p-4 mb-6">
-                <p className="text-feast-red font-semibold">✓ Thank you! We've received your question and will get back to you soon.</p>
-              </div>
-            ) : null}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Name */}
-              <div>
-                <label className="block text-white/80 font-semibold text-sm mb-2">Your Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Example: Juan A. Dela Cruz"
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white
-                             placeholder-white/40 focus:outline-none focus:border-feast-red/50 focus:bg-white/15
-                             transition-all duration-300"
-                />
-              </div>
-
-              {/* Email */}
-              <div>
-                <label className="block text-white/80 font-semibold text-sm mb-2">Email Address</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="Example: juan.delaCruz@gmail.com"
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white
-                             placeholder-white/40 focus:outline-none focus:border-feast-red/50 focus:bg-white/15
-                             transition-all duration-300"
-                />
-              </div>
-
-              {/* Concern */}
-              <div>
-                <label className="block text-white/80 font-semibold text-sm mb-2">Concern/Topic</label>
-                <input
-                  type="text"
-                  name="concern"
-                  value={formData.concern}
-                  onChange={handleInputChange}
-                  placeholder="e.g., Getting Started, Community Building..."
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white
-                             placeholder-white/40 focus:outline-none focus:border-feast-red/50 focus:bg-white/15
-                             transition-all duration-300"
-                />
-              </div>
-
-              {/* Question */}
-              <div>
-                <label className="block text-white/80 font-semibold text-sm mb-2">Your Question</label>
-                <textarea
-                  name="question"
-                  value={formData.question}
-                  onChange={handleInputChange}
-                  placeholder="Please share your question or concern in detail..."
-                  required
-                  rows="5"
-                  className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white
-                             placeholder-white/40 focus:outline-none focus:border-feast-red/50 focus:bg-white/15
-                             transition-all duration-300 resize-none"
-                />
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full btn-primary py-3 flex items-center justify-center gap-2 font-semibold
-                           transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-r-transparent rounded-full animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send size={18} /> Send Your Question
-                  </>
-                )}
-              </button>
-            </form>
           </div>
         </AnimatedSection>
       </div>

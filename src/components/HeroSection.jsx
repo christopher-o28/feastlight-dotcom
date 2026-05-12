@@ -110,7 +110,7 @@ export default function HeroSection({ settings }) {
               className="btn-outline-white text-base px-8 py-4"
             >
               <Play size={16} fill="currentColor" />
-              Watch Feast Talk
+              Watch Feast Light Talks
             </button>
           </motion.div>
         </motion.div>

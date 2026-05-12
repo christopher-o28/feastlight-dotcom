@@ -18,7 +18,7 @@ export default function Navbar({ settings }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
-  const { logoImage = '/Feast-Light-Logo-x180.png', siteName = 'The Feast Light', siteTagline = 'Community of Hope' } = settings || {}
+  const { logoLink = '/Feast-Light-Logo-x180.png', siteName = 'The Feast Light', siteTagline = 'Community of Hope' } = settings || {}
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10)
@@ -42,9 +42,8 @@ export default function Navbar({ settings }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-[70px] gap-4">
         {/* Logo */}
         <a href="#home" onClick={e => handleNav(e, '#home')} className="flex items-center gap-3 flex-shrink-0">
-          <div className="w-12 h-12 bg-feast-red rounded-full flex items-center justify-center
-                          shadow-[0_4px_14px_rgba(255,75,75,0.35)] flex-shrink-0 overflow-hidden">
-            <img src={logoImage} alt="Logo" className="w-full h-full object-cover" />
+          <div className="w-10 h-10 rounded-full overflow-hidden">
+            <img src={logoLink} alt="Logo" className="w-full h-full object-cover" />
           </div>
           <div className="hidden sm:block leading-tight">
             <span className="block font-display font-bold text-feast-dark text-[1.05rem]">{siteName}</span>
@@ -69,6 +68,8 @@ export default function Navbar({ settings }) {
           <li>
             <a
               href="https://play.google.com/store/apps/details?id=com.thefeast.app"
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-primary text-[0.82rem] ml-2"
             >
               Download Feast App
@@ -106,6 +107,8 @@ export default function Navbar({ settings }) {
           ))}
           <a
             href="https://play.google.com/store/apps/details?id=com.thefeast.app"
+            target="_blank"
+            rel="noopener noreferrer"
             className="btn-primary mt-4 justify-center"
           >
             Download Feast App
