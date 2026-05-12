@@ -1,0 +1,22 @@
+function doPost(e) {
+  // Get the spreadsheet and sheet
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('FAQSubmissions');
+  
+  // Get form data from the request
+  const params = e.parameter;
+  
+  // Add a new row with the form data
+  sheet.appendRow([
+    params.timestamp || new Date().toISOString(),
+    params.name || '',
+    params.email || '',
+    params.concern || '',
+    params.question || ''
+  ]);
+  
+  // Return success response
+  return ContentService.createTextOutput(JSON.stringify({
+    result: 'success'
+  })).setMimeType(ContentService.MimeType.JSON);
+}
