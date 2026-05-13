@@ -7,35 +7,38 @@ export default function LoadingScreen() {
         {/* Outer rotating ring */}
         <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-feast-red border-r-feast-red/50 
                         animate-spin shadow-[0_0_60px_rgba(255,75,75,0.3)]" />
-        
+
         {/* Middle pulsing ring */}
         <div className="absolute inset-2 rounded-full border-2 border-feast-red/30 opacity-60
                         shadow-[0_0_40px_rgba(255,75,75,0.2)]" />
-        
+
         {/* Inner rotating ring (reverse direction) */}
         <div className="absolute inset-4 rounded-full border-2 border-transparent border-b-feast-red 
                         animate-spin animate-reverse shadow-[0_0_30px_rgba(255,75,75,0.15)]"
-             style={{ animationDirection: 'reverse' }} />
-        
+          style={{ animationDirection: 'reverse' }} />
+
         {/* Center logo */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-20 h-20 bg-gradient-to-br from-feast-red to-feast-red/80 rounded-full flex items-center justify-center
-                          font-display font-black text-white text-lg
-                          shadow-[0_0_50px_rgba(255,75,75,0.5)]">
-            <span className="animate-pulse">FeastLight</span>
+          <div className="w-20 h-20 bg-gradient-to-br  to-feast-red/80 rounded-full flex items-center justify-center
+                          ">
+            <img
+              src="https://feastlight.com/wp-content/uploads/2022/01/Feast-Light-Logo-x152.png"
+              alt="Feast Light Logo"
+              className="animationLogoLink w-50 h-50 object-contain"
+            />
           </div>
         </div>
       </div>
 
       {/* Text Section */}
       <div className="text-center">
-        <h2 className="font-display font-black text-white text-2xl mb-2 animate-pulse">
+        <h2 className="font-display font-black text-white text-2xl mb-2 animationLogoLink">
           The Feast Light
         </h2>
         <p className="text-white/50 text-sm tracking-widest uppercase mb-4">
           Loading Community...
         </p>
-        
+
         {/* Animated dots */}
         <div className="flex gap-1.5 justify-center">
           <div className="w-2 h-2 bg-feast-red rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
@@ -59,6 +62,13 @@ export default function LoadingScreen() {
         }
         .animate-reverse {
           animation: spin 3s linear infinite reverse;
+        }
+        .animationLogoLink {
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
         }
       `}</style>
     </div>

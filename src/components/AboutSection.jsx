@@ -1,6 +1,4 @@
 // src/components/AboutSection.jsx
-import { motion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
 import AnimatedSection, { StaggerChildren, StaggerItem } from './AnimatedSection'
 
 function InfoCard({ card, isTopCard }) {
@@ -40,12 +38,10 @@ export default function AboutSection({ cards }) {
         {/* Header */}
         <AnimatedSection className="mb-14">
           <div className="section-label">Who We Are</div>
-          <h2 className="section-title mb-4">
-            Built on Faith.<br />Rooted in Community.
-          </h2>
-          <p className="text-gray-500 text-base leading-relaxed max-w-lg">
-            Discover the heart behind The Feast Light and why thousands of families gather every week to grow together.
-          </p>
+          <h1 className="section-title mb-4">
+            What is FeastLight?
+          </h1>
+          
         </AnimatedSection>
 
         {/* Grid */}

@@ -1,5 +1,5 @@
 // src/components/LatestSeriesSection.jsx
-import { Download, ArrowRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import AnimatedSection from './AnimatedSection'
 
 export default function LatestSeriesSection({ series }) {
@@ -9,8 +9,7 @@ export default function LatestSeriesSection({ series }) {
     body = '',
     imageUrl = '',
     imageEmoji = '',
-    englishUrl = 'https://feastlight.com/product-category/feast-talks/english/',
-    tagalogUrl = 'https://feastlight.com/product-category/feast-talks/tagalog/',
+    
   } = series || {}
 
   return (
