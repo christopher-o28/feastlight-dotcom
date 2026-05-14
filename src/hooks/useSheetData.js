@@ -15,6 +15,7 @@
 //    - "Fulltank"       → fulltank video section
 //    - "EquippingSeries"→ equipping section content
 //    - "CTA"            → call-to-action section
+//    - "Podcasts"       → podcast section header + items  ← NEW
 //
 // 2. Publish the spreadsheet:
 //    File → Share → Publish to web → Select "Entire Document" → CSV format
@@ -36,6 +37,9 @@
 //    Fulltank:       youtubeId | title | description | viewMoreUrl
 //    EquippingSeries:title | body | imageEmoji | gradientFrom | gradientTo | viewMoreUrl
 //    CTA:            title | body | graphicEmoji | buildUrl | updateUrl
+//    Podcasts:       id | seriesTitle | soundcloudUrl | embedLabel | sectionTitle | viewMoreUrl
+//                    ↑ first row = first podcast item
+//                      sectionTitle & viewMoreUrl only needed on the first row
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState, useEffect } from 'react'
@@ -67,6 +71,23 @@ async function fetchSheet(sheetName) {
 function rowsToMap(rows) {
   if (!rows) return {}
   return Object.fromEntries(rows.map(r => [r.key, r.value]))
+}
+
+// ─── MAP Podcasts sheet rows → podcasts prop shape ────────────────────────────
+// Google Sheet columns: id | seriesTitle | soundcloudUrl | embedLabel | sectionTitle | viewMoreUrl
+// sectionTitle and viewMoreUrl are read from the first row only.
+function mapPodcastRows(rows) {
+  if (!rows?.length) return null
+  return {
+    title: rows[0].sectionTitle || 'Podcasts',
+    viewMoreUrl: rows[0].viewMoreUrl || '#',
+    items: rows.map(row => ({
+      id: row.id || row.seriesTitle?.toLowerCase().replace(/\s+/g, '-'),
+      seriesTitle: row.seriesTitle || '',
+      soundcloudUrl: row.soundcloudUrl || '',
+      embedLabel: row.embedLabel || '',
+    })),
+  }
 }
 
 // ─── DEFAULT FALLBACK DATA (used when no Sheet ID is configured) ───────────
@@ -159,6 +180,27 @@ export const defaultData = {
     title: 'FULLTANK',
     description: 'FULLTANK is our signature video series featuring inspiring messages, testimonies, and faith stories that will fill your heart and fuel your spirit for the week ahead. New videos every week.',
     viewMoreUrl: '#',
+  },
+  // ── NEW: Podcasts default fallback ────────────────────────────────────────
+  podcasts: {
+    title: 'Podcasts',
+    viewMoreUrl: '#',
+    items: [
+      {
+        id: 'no-longer-strangers',
+        seriesTitle: 'No Longer Strangers',
+        soundcloudUrl:
+          'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/your-playlist-id-1&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true',
+        embedLabel: 'The Feast Radio · No Longer Strangers',
+      },
+      {
+        id: 'the-good-life',
+        seriesTitle: 'The Good Life',
+        soundcloudUrl:
+          'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/your-playlist-id-2&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true',
+        embedLabel: 'The Feast Radio · The Good Life',
+      },
+    ],
   },
   locations: [
     {
@@ -400,6 +442,7 @@ export function useSheetData() {
         fulltankRows,
         equippingRows,
         ctaRows,
+        podcastRows,           // ← NEW
       ] = await Promise.all([
         fetchSheet('SiteSettings'),
         fetchSheet('AboutCards'),
@@ -412,6 +455,7 @@ export function useSheetData() {
         fetchSheet('Fulltank'),
         fetchSheet('EquippingSeries'),
         fetchSheet('CTA'),
+        fetchSheet('Podcasts'), // ← NEW
       ])
 
       const siteSettings = settingsRows ? rowsToMap(settingsRows) : defaultData.siteSettings
@@ -423,13 +467,10 @@ export function useSheetData() {
       // Merge hierarchical location data
       let locations = locationRows?.length ? locationRows : defaultData.locations
       if (subRegionRows?.length && subLocationRows?.length) {
-        // Group sub-locations by parentSubRegionId
         const subLocationMap = {}
         subLocationRows.forEach(sub => {
           const parentId = sub.parentSubRegionId
-          if (!subLocationMap[parentId]) {
-            subLocationMap[parentId] = []
-          }
+          if (!subLocationMap[parentId]) subLocationMap[parentId] = []
           subLocationMap[parentId].push({
             id: sub.id || `${parentId}-${subLocationMap[parentId].length + 1}`,
             name: sub.name,
@@ -440,13 +481,10 @@ export function useSheetData() {
           })
         })
 
-        // Group sub-regions by parentLocationId and attach sub-locations
         const subRegionMap = {}
         subRegionRows.forEach(subRegion => {
           const parentId = subRegion.parentLocationId
-          if (!subRegionMap[parentId]) {
-            subRegionMap[parentId] = []
-          }
+          if (!subRegionMap[parentId]) subRegionMap[parentId] = []
           subRegionMap[parentId].push({
             id: subRegion.id,
             name: subRegion.name,
@@ -455,7 +493,6 @@ export function useSheetData() {
           })
         })
 
-        // Attach sub-regions to their parent locations
         locations = locations.map(loc => ({
           ...loc,
           subRegions: subRegionMap[loc.id] || [],
@@ -471,6 +508,7 @@ export function useSheetData() {
         hangouts: hangoutRows?.length ? hangoutRows : defaultData.hangouts,
         equipping: equippingRow.title ? equippingRow : defaultData.equipping,
         fulltank: fulltankRow.youtubeId ? fulltankRow : defaultData.fulltank,
+        podcasts: mapPodcastRows(podcastRows) ?? defaultData.podcasts, // ← NEW
         locations,
       }
 
@@ -478,7 +516,6 @@ export function useSheetData() {
       const timestamp = new Date().toISOString()
       setLastUpdated(timestamp)
 
-      // Save to localStorage for persistence
       try {
         localStorage.setItem('feast_light_data', JSON.stringify(newData))
         localStorage.setItem('feast_light_last_updated', timestamp)
@@ -490,7 +527,6 @@ export function useSheetData() {
     } catch (err) {
       console.warn('⚠ Google Sheets fetch failed, using cached or default data:', err.message)
       setError(err.message)
-      // Data remains as cached version or default
     } finally {
       setLoading(false)
     }

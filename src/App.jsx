@@ -32,6 +32,7 @@ export default function App() {
     hangouts,
     equipping,
     fulltank,
+    podcasts,       // ← ADDED
     locations,
   } = data
 
@@ -69,8 +70,8 @@ export default function App() {
         {/* 7. Equipping Series */}
         <EquippingSection equipping={equipping} />
 
-        {/* 8. Fulltank Video */}
-        <FulltankSection fulltank={fulltank} />
+        {/* 8. Fulltank + Podcasts */}
+        <FulltankSection fulltank={fulltank} podcasts={podcasts} />  {/* ← ADDED podcasts */}
 
         {/* 9. Locations */}
         <LocationGrid locations={locations} />
