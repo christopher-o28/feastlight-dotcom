@@ -8,7 +8,7 @@ function HangoutCard({ card }) {
     title,
     description,
     imageUrl,
-    emoji = '🎵',
+    emoji = '',
     gradientFrom = '#1a1a2e',
     gradientTo = '#302b63',
     downloadUrl = '#',

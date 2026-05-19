@@ -2,6 +2,39 @@
 import { Play, ArrowRight } from 'lucide-react'
 import AnimatedSection from './AnimatedSection'
 
+function getSoundCloudEmbedUrl(input) {
+  if (!input) return '';
+  
+  // If user pasted the whole iframe HTML, extract the src
+  if (input.includes('<iframe') && input.includes('src=')) {
+    const match = input.match(/src=["'](.*?)["']/);
+    if (match && match[1]) {
+      input = match[1]; // Extract the src and continue processing
+    }
+  }
+
+  // If it's already a player embed URL
+  if (input.includes('w.soundcloud.com/player')) {
+    // Enforce classic style (visual=false)
+    if (input.includes('visual=true')) {
+      return input.replace('visual=true', 'visual=false');
+    } else if (!input.includes('visual=')) {
+      return `${input}&visual=false`;
+    }
+    return input;
+  }
+
+  // If it's a standard soundcloud.com link, convert it to embed format with classic style
+  if (input.includes('soundcloud.com')) {
+    return `https://w.soundcloud.com/player/?url=${encodeURIComponent(
+      input
+    )}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=false`;
+  }
+
+  // Fallback
+  return input;
+}
+
 export default function FulltankSection({ fulltank, podcasts }) {
   const {
     youtubeId = '',
@@ -88,17 +121,23 @@ export default function FulltankSection({ fulltank, podcasts }) {
                   </h3>
 
                   {/* SoundCloud Embed */}
-                  <div className="rounded-xl overflow-hidden border border-gray-100 shadow-sm">
-                    <iframe
-                      title={podcast.seriesTitle}
-                      width="100%"
-                      height="450"
-                      scrolling="no"
-                      frameBorder="no"
-                      allow="autoplay"
-                      src={podcast.soundcloudUrl}
-                      className="block"
-                    />
+                  <div className="rounded-xl overflow-hidden border border-gray-100 shadow-sm bg-gray-50 flex items-center justify-center">
+                    {podcast.soundcloudUrl ? (
+                      <iframe
+                        title={podcast.seriesTitle}
+                        width="100%"
+                        height="450"
+                        scrolling="no"
+                        frameBorder="no"
+                        allow="autoplay"
+                        src={getSoundCloudEmbedUrl(podcast.soundcloudUrl)}
+                        className="block w-full h-[450px]"
+                      />
+                    ) : (
+                      <div className="h-[450px] flex items-center justify-center text-gray-400 text-sm">
+                        No podcast link provided
+                      </div>
+                    )}
                   </div>
 
                   {/* Embed label */}

@@ -30,7 +30,34 @@ export default function FAQSection() {
       id: 5,
       question: 'What should we do during a Feast Light?',
       answer: 'Share a meal together, have meaningful conversations, pray if you\'re comfortable doing so, and create an environment of openness and acceptance. The focus is on genuine connection.'
-    }
+    },
+    {
+      id: 6,
+      question: 'How to put up a Feast Light?',
+      answer: (
+        <ol className="list-decimal pl-5 space-y-2 mt-1">
+          <li> Register a Feast Light register on this link <a href="https://tally.so/r/wdjq5o" target="_blank" rel="noopener noreferrer" className="text-feast-red hover:text-red-400 underline underline-offset-2 transition-colors">https://tally.so/r/wdjq5o</a></li>
+          <li> In the register field, fill out the region, district, city/province/state, first name, last name, email address and contact number.</li>
+          <li> Download a video talk from your chosen Feast Series and other resources.</li>
+          <li> Gather 5 or more people.</li>
+          <li> Play the video.</li>
+          <li> Talk about your insights and reflections from the video.</li>
+          <li> Do it again next week!</li>
+        </ol>
+      )
+    },
+     {
+      id: 7,
+      question: 'What are the equipments that we need in accordance with having a Feast Light?',
+      answer: ( 
+        <ol className="list-decimal pl-5 space-y-2 mt-1">
+          <li> Laptop</li>
+          <li> Projector (especially if you're having a huge number of attendees)</li>
+          <li> Video talk of the series</li>
+        </ol>
+    )
+    },
+    
   ]
 
   const toggleFAQ = (id) => {
@@ -71,7 +98,7 @@ export default function FAQSection() {
                 
                 {openFAQ === faq.id && (
                   <div className="px-6 py-4 bg-white/5 border-t border-white/10">
-                    <p className="text-white/70 leading-relaxed">{faq.answer}</p>
+                    <div className="text-white/70 leading-relaxed">{faq.answer}</div>
                   </div>
                 )}
               </div>
