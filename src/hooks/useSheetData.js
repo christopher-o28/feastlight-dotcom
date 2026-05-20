@@ -489,7 +489,7 @@ export function useSheetData() {
         console.warn('Failed to save to localStorage:', storageErr)
       }
 
-      console.log('✓ Successfully fetched data from Google Sheets')
+     
     } catch (err) {
       console.warn('⚠ Google Sheets fetch failed, using cached or default data:', err.message)
       setError(err.message)

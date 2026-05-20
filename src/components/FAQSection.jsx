@@ -91,9 +91,9 @@ export default function FAQSection() {
                 >
                   <span className="text-white font-semibold text-left">{faq.question}</span>
                   <ChevronDown 
-                    size={20} 
-                    className={`text-feast-red/70 transition-transform duration-300 ${openFAQ === faq.id ? 'rotate-180' : ''}`}
-                  />
+                      size={20} 
+                      className={`text-feast-red/70 transition-transform duration-300 flex-shrink-0 ${openFAQ === faq.id ? 'rotate-180' : ''}`}
+                    />
                 </button>
                 
                 {openFAQ === faq.id && (

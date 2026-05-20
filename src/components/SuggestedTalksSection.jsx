@@ -7,7 +7,7 @@ import { Search, X, ChevronDown, ChevronUp, Download, ArrowLeft, ArrowRight, Pla
 
 const TAGS = [
   'English', 'Tagalog', 'Visayan', '2026', '2025', '2024', '2023', '2022', '2021',
-  '2020', '2019', '2018', '2017', '2016', '2015', '2015 and below year',
+  '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012','2011','2010', '2009', 
 ]
 
 const PAGE_SIZE = 10
@@ -507,34 +507,7 @@ function SubtalkModal({ subtalk, seriesCard, onClose }) {
                 </div>
               )}
 
-              {/* Resources - QR Codes Horizontal */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
-                {/* Discussion Guide */}
-                <div style={{
-                  background: '#1a1a2a', border: '1px solid rgba(255,255,255,.08)',
-                  borderRadius: 14, padding: '14px 16px',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, textAlign: 'center',
-                }}>
-                  <QRPlaceholder seed={3} imageUrl={subtalk.discussionGuideQrUrl} />
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.3)' }}>Resource</div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: '#f0f4f8' }}>Discussion Guide</div>
-                  </div>
-                </div>
 
-                {/* Talk Slides */}
-                <div style={{
-                  background: '#1a1a2a', border: '1px solid rgba(255,255,255,.08)',
-                  borderRadius: 14, padding: '14px 16px',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, textAlign: 'center',
-                }}>
-                  <QRPlaceholder seed={7} imageUrl={subtalk.talkSlidesQrUrl} />
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.3)' }}>Resource</div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: '#f0f4f8' }}>Talk Slides</div>
-                  </div>
-                </div>
-              </div>
 
               {/* Description */}
               {subtalk.description && (
@@ -708,60 +681,7 @@ function SubtalksPanel({ seriesId, seriesCard, subtalksMap, isLoading }) {
                     </div>
                   )}
 
-                  {/* Resources - QR Codes and Download Buttons Horizontal */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginBottom: 16 }}>
-                    {/* Discussion Guide */}
-                    <div style={{
-                      background: '#1a1a2a', border: '1px solid rgba(255,255,255,.08)',
-                      borderRadius: 14, padding: '14px 16px',
-                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, textAlign: 'center',
-                    }}>
-                      <QRPlaceholder seed={3} imageUrl={st.discussionGuideQrUrl} />
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.3)' }}>Resource</div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: '#f0f4f8' }}>Discussion Guide</div>
-                      </div>
-                      <a
-                        href={st.discussionGuideUrl} download
-                        style={{
-                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                          padding: '8px 16px', borderRadius: 999, background: '#e53e3e', color: '#fff',
-                          fontSize: 12, fontWeight: 700, textDecoration: 'none', letterSpacing: '.04em',
-                          transition: 'background .15s', cursor: 'pointer',
-                        }}
-                        onMouseEnter={e => e.currentTarget.style.background = '#c53030'}
-                        onMouseLeave={e => e.currentTarget.style.background = '#e53e3e'}
-                      >
-                        Download
-                      </a>
-                    </div>
 
-                    {/* Talk Slides */}
-                    <div style={{
-                      background: '#1a1a2a', border: '1px solid rgba(255,255,255,.08)',
-                      borderRadius: 14, padding: '14px 16px',
-                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, textAlign: 'center',
-                    }}>
-                      <QRPlaceholder seed={7} imageUrl={st.talkSlidesQrUrl} />
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.3)' }}>Resource</div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: '#f0f4f8' }}>Talk Slides</div>
-                      </div>
-                      <a
-                        href={st.talkSlidesUrl} download
-                        style={{
-                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                          padding: '8px 16px', borderRadius: 999, background: '#e53e3e', color: '#fff',
-                          fontSize: 12, fontWeight: 700, textDecoration: 'none', letterSpacing: '.04em',
-                          transition: 'background .15s', cursor: 'pointer',
-                        }}
-                        onMouseEnter={e => e.currentTarget.style.background = '#c53030'}
-                        onMouseLeave={e => e.currentTarget.style.background = '#e53e3e'}
-                      >
-                        Download
-                      </a>
-                    </div>
-                  </div>
 
                   {/* Description */}
                   {st.description && (
@@ -1077,15 +997,16 @@ export default function TalksSearchBar({
     
     fetchSubtalksFromSheet(subtalkSheetUrl)
       .then(rows => {
-        if (!isMounted) return
-        const map = {}
-        rows.forEach(row => {
-          if (!row.seriesId) return
-          if (!map[row.seriesId]) map[row.seriesId] = []
-          map[row.seriesId].push(row)
-        })
-        setSubtalksMap(map)
-      })
+  if (!isMounted) return
+  const map = {}
+  rows.forEach(row => {
+    if (!row.seriesId) return
+    const key = String(row.seriesId).trim()   // ← normalize to string
+    if (!map[key]) map[key] = []
+    map[key].push(row)
+  })
+  setSubtalksMap(map)
+})
       .catch(err => {
         if (!isMounted) return
         console.error('Subtalks fetch error:', err.message)
@@ -1099,19 +1020,6 @@ export default function TalksSearchBar({
   }, [subtalkSheetUrl])
 
   // 🔍 TEMPORARY DEBUG — remove after fixing
-useEffect(() => {
-  if (!subtalksLoading) {
-    console.log('=== SUBTALK DEBUG ===')
-    console.log('subtalksMap keys:', Object.keys(subtalksMap))
-    console.log('subtalksMap count:', Object.keys(subtalksMap).length)
-    console.log('talks seriesIds:', talks.map(t => ({ id: t.id, seriesId: t.seriesId })))
-    const mapKeys = Object.keys(subtalksMap)
-    const talkIds = talks.map(t => t.seriesId || t.id)
-    const matches = talkIds.filter(id => mapKeys.includes(id))
-    console.log('MATCHING IDs:', matches)
-    console.log('MISMATCHED talk IDs:', talkIds.filter(id => !mapKeys.includes(id)))
-  }
-}, [subtalksMap, subtalksLoading, talks])
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase()
