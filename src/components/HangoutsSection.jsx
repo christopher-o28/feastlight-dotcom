@@ -82,7 +82,7 @@ export default function HangoutsSection({ hangouts }) {
         <AnimatedSection className="mb-12">
           <div className="section-label">Connect</div>
           <h2 className="section-title">Hangouts</h2>
-          // ✅ After
+          
           <div className="text-gray-500 text-base mt-3 leading-relaxed">
             <ol className="">
               <li>What are the Hangouts Videos?</li>
