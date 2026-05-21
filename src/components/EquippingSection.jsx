@@ -24,7 +24,12 @@ export default function EquippingSection({ equipping }) {
             <p className="text-gray-500 leading-relaxed text-[0.95rem] mb-10">
               Learn how to facilitate meaningful gatherings, care for your members, grow your community, and sustain your own spiritual health as a servant-leader.
             </p>
-            <a href={viewMoreUrl} className="btn-primary px-3 py-3 w-60 flex items-center justify-center gap-2">
+            <a
+              href={viewMoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary px-3 py-3 w-60 flex items-center justify-center gap-2"
+            >
               View More <ArrowRight size={16} />
             </a>
           </AnimatedSection>
@@ -32,12 +37,24 @@ export default function EquippingSection({ equipping }) {
           {/* Graphic */}
           <AnimatedSection delay={0.2}>
             <div
-              className="rounded-3xl aspect-[4/3] flex items-center justify-center text-7xl
-                         shadow-[0_20px_60px_rgba(255,75,75,0.28)] relative overflow-hidden"
-              style={{ background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})` }}
+              className="rounded-3xl aspect-[16/9] relative overflow-hidden
+                         shadow-[0_20px_60px_rgba(255,75,75,0.28)]"
+              style={{
+                background: (!imageUrl || imageUrl === '#')
+                  ? `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})`
+                  : undefined,
+              }}
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.15),transparent_60%)]" />
-              <img src={imageUrl} alt="Equipping" className="relative z-10 w-full h-full object-cover" />
+              {(!imageUrl || imageUrl === '#') && (
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.15),transparent_60%)]" />
+              )}
+              {imageUrl && imageUrl !== '#' && (
+                <img
+                  src={imageUrl}
+                  alt="Equipping"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              )}
             </div>
           </AnimatedSection>
         </div>

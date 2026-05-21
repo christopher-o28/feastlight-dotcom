@@ -15,8 +15,8 @@ export default function LatestSeriesSection({ series }) {
   const imageUrl = sheetImageUrl || '/called_to_witness.png';
 
   return (
-    <section id="series" className="py-24 px-4 bg-white">
-      <div className="max-w-[1400px] mx-auto">
+    <section id="series" className="pt-16 pb-24 px-8 bg-white mt-2">
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
           {/* Left */}
           <AnimatedSection className="lg:col-span-6 xl:col-span-5">

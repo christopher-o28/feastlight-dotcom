@@ -35,11 +35,10 @@ export default function Navbar({ settings }) {
 
   return (
     <nav
-      className={`sticky top-0 z-50 bg-white transition-shadow duration-300 ${
-        scrolled ? 'shadow-[0_2px_20px_rgba(0,0,0,0.08)]' : 'border-b border-gray-100'
-      }`}
+      className={`sticky top-0 z-50 bg-white transition-shadow duration-300 ${scrolled ? 'shadow-[0_2px_20px_rgba(0,0,0,0.08)]' : 'border-b border-gray-100'
+        }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-[70px] gap-4">
+      <div className="max-w-7xl mx-auto px-6 lg:px-1 flex items-center justify-between h-[70px] gap-4">
         {/* Logo */}
         <a href="#home" onClick={e => handleNav(e, '#home')} className="flex items-center gap-3 flex-shrink-0">
           <div className="w-10 h-10 rounded-full overflow-hidden">
@@ -89,9 +88,8 @@ export default function Navbar({ settings }) {
 
       {/* Mobile Menu */}
       <div
-        className={`lg:hidden overflow-hidden transition-all duration-300 ${
-          menuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-        }`}
+        className={`lg:hidden overflow-hidden transition-all duration-300 ${menuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+          }`}
       >
         <div className="border-t border-gray-100 px-4 py-3 flex flex-col">
           {NAV_LINKS.map(link => (

@@ -7,10 +7,10 @@ import { Search, X, ChevronDown, ChevronUp, Download, ArrowLeft, ArrowRight, Pla
 
 const TAGS = [
   'English', 'Tagalog', 'Visayan', '2026', '2025', '2024', '2023', '2022', '2021',
-  '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012','2011','2010', '2009', 
+  '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012', '2011', '2010', '2009',
 ]
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 6
 
 // ─── Google Sheets Fetcher ────────────────────────────────────────────────────
 // Fetches subtalks from a published Google Sheet (CSV export URL)
@@ -37,7 +37,7 @@ export async function fetchSubtalksFromSheet(sheetCsvUrl) {
   try {
     const res = await fetch(sheetCsvUrl, { signal: controller.signal })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    
+
     const text = await res.text()
     const rows = text.trim().split('\n').map(row => parseCSVRow(row))
     const [header, ...dataRows] = rows
@@ -45,19 +45,19 @@ export async function fetchSubtalksFromSheet(sheetCsvUrl) {
     const result = dataRows
       .filter(row => row.length >= 2 && row[0])
       .map(row => ({
-        seriesId:            (row[0]  || '').trim(),
-        talkNumber:          (row[1]  || '').trim(),
-        talkTitle:           (row[2]  || '').trim(),
-        talkVideoUrl:        (row[3]  || '').trim(),
-        talkVideoUrlDownload:(row[4]  || '').trim(),
-        talkThumbnailUrl:   (row[5]  || '').trim(),
-        discussionGuideUrl:  (row[6]  || '#').trim(),
-        discussionGuideQrUrl:(row[7]  || '').trim(),
-        talkSlidesUrl:       (row[8]  || '#').trim(),
-        talkSlidesQrUrl:     (row[9]  || '').trim(),
-        keyMessage:          (row[10] || '').trim(),
-        quote:               (row[11] || '').trim(),
-        description:         (row[12] || '').trim(),
+        seriesId: (row[0] || '').trim(),
+        talkNumber: (row[1] || '').trim(),
+        talkTitle: (row[2] || '').trim(),
+        talkVideoUrl: (row[3] || '').trim(),
+        talkVideoUrlDownload: (row[4] || '').trim(),
+        talkThumbnailUrl: (row[5] || '').trim(),
+        discussionGuideUrl: (row[6] || '#').trim(),
+        discussionGuideQrUrl: (row[7] || '').trim(),
+        talkSlidesUrl: (row[8] || '#').trim(),
+        talkSlidesQrUrl: (row[9] || '').trim(),
+        keyMessage: (row[10] || '').trim(),
+        quote: (row[11] || '').trim(),
+        description: (row[12] || '').trim(),
       }))
 
     // Cache the result
@@ -229,29 +229,29 @@ function TalkVideoPlayer({ url, talkNumber, description, thumbnailUrl }) {
 
 function SubtalkRow({ subtalk, onOpen, isStatic = false }) {
   const hasVideo = !!(subtalk.talkVideoUrl)
-  
-  const baseStyle = isStatic 
+
+  const baseStyle = isStatic
     ? {
-        display: 'flex', alignItems: 'center', gap: 14,
-        padding: '14px 16px',
-        borderRadius: 12,
-        background: 'linear-gradient(135deg, rgba(255,107,107,.12) 0%, rgba(255,107,107,.08) 100%)',
-        border: '1px solid rgba(255,107,107,.35)',
-        cursor: 'pointer',
-        transition: 'all .2s cubic-bezier(0.34, 1.3, 0.64, 1)',
-        boxShadow: '0 8px 20px rgba(255,107,107,.15)',
-        transform: 'translateY(-2px)',
-      }
+      display: 'flex', alignItems: 'center', gap: 14,
+      padding: '14px 16px',
+      borderRadius: 12,
+      background: 'linear-gradient(135deg, rgba(255,107,107,.12) 0%, rgba(255,107,107,.08) 100%)',
+      border: '1px solid rgba(255,107,107,.35)',
+      cursor: 'pointer',
+      transition: 'all .2s cubic-bezier(0.34, 1.3, 0.64, 1)',
+      boxShadow: '0 8px 20px rgba(255,107,107,.15)',
+      transform: 'translateY(-2px)',
+    }
     : {
-        display: 'flex', alignItems: 'center', gap: 14,
-        padding: '14px 16px',
-        borderRadius: 12,
-        background: 'linear-gradient(135deg, rgba(255,107,107,.04) 0%, rgba(255,107,107,.02) 100%)',
-        border: '1px solid rgba(255,107,107,.15)',
-        cursor: 'pointer',
-        transition: 'all .2s cubic-bezier(0.34, 1.3, 0.64, 1)',
-        boxShadow: '0 2px 8px rgba(0,0,0,.2)',
-      }
+      display: 'flex', alignItems: 'center', gap: 14,
+      padding: '14px 16px',
+      borderRadius: 12,
+      background: 'linear-gradient(135deg, rgba(255,107,107,.04) 0%, rgba(255,107,107,.02) 100%)',
+      border: '1px solid rgba(255,107,107,.15)',
+      cursor: 'pointer',
+      transition: 'all .2s cubic-bezier(0.34, 1.3, 0.64, 1)',
+      boxShadow: '0 2px 8px rgba(0,0,0,.2)',
+    }
 
   return (
     <div
@@ -260,13 +260,13 @@ function SubtalkRow({ subtalk, onOpen, isStatic = false }) {
       tabIndex={0}
       onKeyDown={e => e.key === 'Enter' && onOpen(subtalk)}
       style={baseStyle}
-      onMouseEnter={isStatic ? undefined : e => { 
+      onMouseEnter={isStatic ? undefined : e => {
         e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255,107,107,.12) 0%, rgba(255,107,107,.08) 100%)'
         e.currentTarget.style.borderColor = 'rgba(255,107,107,.35)'
         e.currentTarget.style.transform = 'translateY(-2px)'
         e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,107,107,.15)'
       }}
-      onMouseLeave={isStatic ? undefined : e => { 
+      onMouseLeave={isStatic ? undefined : e => {
         e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255,107,107,.04) 0%, rgba(255,107,107,.02) 100%)'
         e.currentTarget.style.borderColor = 'rgba(255,107,107,.15)'
         e.currentTarget.style.transform = 'translateY(0)'
@@ -317,7 +317,7 @@ function SubtalkRow({ subtalk, onOpen, isStatic = false }) {
 
 function SubtalkCard({ subtalk, onOpen }) {
   const hasVideo = !!(subtalk.talkVideoUrl)
-  
+
   return (
     <div
       onClick={() => onOpen(subtalk)}
@@ -334,13 +334,13 @@ function SubtalkCard({ subtalk, onOpen }) {
         cursor: 'pointer',
         transition: 'all .2s',
       }}
-      onMouseEnter={e => { 
+      onMouseEnter={e => {
         e.currentTarget.style.borderColor = 'rgba(255,107,107,.3)'
         e.currentTarget.style.background = '#1f1f30'
         e.currentTarget.style.transform = 'translateY(-2px)'
         e.currentTarget.style.boxShadow = '0 8px 24px rgba(255,107,107,.15)'
       }}
-      onMouseLeave={e => { 
+      onMouseLeave={e => {
         e.currentTarget.style.borderColor = 'rgba(255,255,255,.08)'
         e.currentTarget.style.background = '#1a1a2a'
         e.currentTarget.style.transform = 'translateY(0)'
@@ -361,8 +361,8 @@ function SubtalkCard({ subtalk, onOpen }) {
         {subtalk.talkThumbnailUrl
           ? <img src={subtalk.talkThumbnailUrl} alt={subtalk.talkTitle} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           : <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,107,107,.1) 0%, rgba(255,107,107,.05) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div style={{ width: 0, height: 0, borderTop: '12px solid transparent', borderBottom: '12px solid transparent', borderLeft: hasVideo ? '20px solid rgba(255,107,107,.6)' : '20px solid rgba(255,255,255,.2)', marginLeft: 4 }} />
-            </div>
+            <div style={{ width: 0, height: 0, borderTop: '12px solid transparent', borderBottom: '12px solid transparent', borderLeft: hasVideo ? '20px solid rgba(255,107,107,.6)' : '20px solid rgba(255,255,255,.2)', marginLeft: 4 }} />
+          </div>
         }
         {subtalk.talkThumbnailUrl && (
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -599,7 +599,7 @@ function SubtalksPanel({ seriesId, seriesCard, subtalksMap, isLoading }) {
           }}>
             <Play size={12} style={{ color: '#e53e3e', marginLeft: 2 }} />
           </div>
-         
+
           <span style={{
             fontSize: 11, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase',
             padding: '4px 10px', borderRadius: 999,
@@ -621,8 +621,8 @@ function SubtalksPanel({ seriesId, seriesCard, subtalksMap, isLoading }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, paddingTop: 4, paddingBottom: 12 }}>
           {subtalks.map((st, i) => (
             <div key={i}>
-              <SubtalkRow 
-                subtalk={st} 
+              <SubtalkRow
+                subtalk={st}
                 onOpen={(subtalk) => {
                   if (activeSubtalk?.talkNumber === subtalk.talkNumber) {
                     setActiveSubtalk(null)
@@ -632,11 +632,11 @@ function SubtalksPanel({ seriesId, seriesCard, subtalksMap, isLoading }) {
                 }}
                 isStatic={activeSubtalk?.talkNumber === st.talkNumber}
               />
-              
+
               {/* Inline subtalk details */}
               {activeSubtalk?.talkNumber === st.talkNumber && (
                 <div style={{ padding: '16px 12px', borderRadius: 12, background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.1)', marginTop: 8 }}>
-                  
+
                   {/* Video - Full Width */}
                   <div style={{ marginBottom: 16 }}>
                     <TalkVideoPlayer
@@ -981,32 +981,32 @@ export default function TalksSearchBar({
   // Optional: pass pre-loaded subtalks map { seriesId: [subtalk, ...] }
   initialSubtalksMap = {},
 }) {
-  const [query, setQuery]               = useState('')
-  const [activeTag, setActiveTag]       = useState('')
-  const [page, setPage]                 = useState(1)
+  const [query, setQuery] = useState('')
+  const [activeTag, setActiveTag] = useState('')
+  const [page, setPage] = useState(1)
   const [selectedCard, setSelectedCard] = useState(null)
-  const [subtalksMap, setSubtalksMap]   = useState(initialSubtalksMap)
+  const [subtalksMap, setSubtalksMap] = useState(initialSubtalksMap)
   const [subtalksLoading, setSubtalksLoading] = useState(false)
 
   // Fetch subtalks from Google Sheet on mount (if URL provided)
   useEffect(() => {
     if (!subtalkSheetUrl) return
-    
+
     let isMounted = true
     setSubtalksLoading(true)
-    
+
     fetchSubtalksFromSheet(subtalkSheetUrl)
       .then(rows => {
-  if (!isMounted) return
-  const map = {}
-  rows.forEach(row => {
-    if (!row.seriesId) return
-    const key = String(row.seriesId).trim()   // ← normalize to string
-    if (!map[key]) map[key] = []
-    map[key].push(row)
-  })
-  setSubtalksMap(map)
-})
+        if (!isMounted) return
+        const map = {}
+        rows.forEach(row => {
+          if (!row.seriesId) return
+          const key = String(row.seriesId).trim()   // ← normalize to string
+          if (!map[key]) map[key] = []
+          map[key].push(row)
+        })
+        setSubtalksMap(map)
+      })
       .catch(err => {
         if (!isMounted) return
         console.error('Subtalks fetch error:', err.message)
@@ -1015,7 +1015,7 @@ export default function TalksSearchBar({
       .finally(() => {
         if (isMounted) setSubtalksLoading(false)
       })
-    
+
     return () => { isMounted = false }
   }, [subtalkSheetUrl])
 
@@ -1037,159 +1037,156 @@ export default function TalksSearchBar({
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
   const startIndex = (page - 1) * PAGE_SIZE
-  const endIndex   = Math.min(startIndex + PAGE_SIZE, filtered.length)
-  const visible    = filtered.slice(startIndex, endIndex)
+  const endIndex = Math.min(startIndex + PAGE_SIZE, filtered.length)
+  const visible = filtered.slice(startIndex, endIndex)
 
-  const handleQuery   = useCallback((e) => { setQuery(e.target.value); setPage(1) }, [])
-  const handleClear   = useCallback(() => { setQuery(''); setPage(1) }, [])
-  const handleTag     = useCallback((tag) => { setActiveTag(tag); setPage(1) }, [])
-  const openModal     = useCallback((card) => setSelectedCard(card), [])
-  const closeModal    = useCallback(() => setSelectedCard(null), [])
+  const handleQuery = useCallback((e) => { setQuery(e.target.value); setPage(1) }, [])
+  const handleClear = useCallback(() => { setQuery(''); setPage(1) }, [])
+  const handleTag = useCallback((tag) => { setActiveTag(tag); setPage(1) }, [])
+  const openModal = useCallback((card) => setSelectedCard(card), [])
+  const closeModal = useCallback(() => setSelectedCard(null), [])
   const navigateModal = useCallback((card) => setSelectedCard(card), [])
-  const goToPage      = useCallback((p) => setPage(Math.max(1, Math.min(p, totalPages))), [totalPages])
+  const goToPage = useCallback((p) => setPage(Math.max(1, Math.min(p, totalPages))), [totalPages])
 
   return (
     <section id="talks" className="py-24 px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         <div className="w-full">
 
-      {selectedCard && (
-        <TalkModal
-          card={selectedCard}
-          allCards={filtered}
-          onClose={closeModal}
-          onNavigate={navigateModal}
-          subtalksMap={subtalksMap}
-          subtalksLoading={subtalksLoading}
-        />
-      )}
-
-      {/* Top row */}
-      <div className="flex items-center justify-between gap-3 flex-wrap mb-5">
-        <div className="flex flex-wrap gap-2">
-          {['All', ...TAGS].map(tag => {
-            const val = tag === 'All' ? '' : tag
-            const isActive = activeTag === val
-            return (
-              <button
-                key={tag}
-                onClick={() => handleTag(val)}
-                className={[
-                  'rounded-full px-4 py-1.5 text-[0.72rem] font-semibold',
-                  'border transition-all duration-150 leading-none',
-                  isActive
-                    ? 'bg-red-400 border-red-400 text-white'
-                    : 'bg-transparent border-red-300 text-red-500 hover:bg-red-50',
-                ].join(' ')}
-              >
-                {tag}
-              </button>
-            )
-          })}
-        </div>
-
-        <div className="flex items-center gap-2 border border-red-300 rounded-full px-3.5 h-9 w-48 shrink-0 bg-white focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all duration-150">
-          <Search size={13} className="text-red-400 shrink-0" />
-          <input
-            type="text" value={query} onChange={handleQuery}
-            placeholder="Search talks…"
-            className="flex-1 bg-transparent outline-none text-[0.8rem] text-gray-700 placeholder-red-300 min-w-0"
-          />
-          {query && (
-            <button onClick={handleClear} aria-label="Clear search">
-              <X size={12} className="text-red-400 hover:text-red-600 transition-colors" />
-            </button>
+          {selectedCard && (
+            <TalkModal
+              card={selectedCard}
+              allCards={filtered}
+              onClose={closeModal}
+              onNavigate={navigateModal}
+              subtalksMap={subtalksMap}
+              subtalksLoading={subtalksLoading}
+            />
           )}
-        </div>
-      </div>
 
-      {/* Result meta */}
-      <p className="text-[0.75rem] text-gray-400 mb-4">
-        {filtered.length === talks.length
-          ? <>Showing <span className="text-gray-600 font-medium">{PAGE_SIZE}</span> of <span className="text-gray-600 font-medium">{talks.length}</span> talks (Page <span className="text-gray-600 font-medium">{totalPages > 0 ? page : 0}</span> of <span className="text-gray-600 font-medium">{totalPages}</span>)</>
-          : <><span className="text-gray-600 font-medium">{filtered.length}</span> result{filtered.length !== 1 ? 's' : ''} found (Page <span className="text-gray-600 font-medium">{totalPages > 0 ? page : 0}</span> of <span className="text-gray-600 font-medium">{totalPages}</span>)</>
-        }
-      </p>
+          {/* Top row */}
+          <div className="flex items-center justify-between gap-3 flex-wrap mb-5">
+            <div className="flex flex-wrap gap-2">
+              {['All', ...TAGS].map(tag => {
+                const val = tag === 'All' ? '' : tag
+                const isActive = activeTag === val
+                return (
+                  <button
+                    key={tag}
+                    onClick={() => handleTag(val)}
+                    className={[
+                      'rounded-full px-4 py-1.5 text-[0.72rem] font-semibold',
+                      'border transition-all duration-150 leading-none',
+                      isActive
+                        ? 'bg-red-400 border-red-400 text-white'
+                        : 'bg-transparent border-red-300 text-red-500 hover:bg-red-50',
+                    ].join(' ')}
+                  >
+                    {tag}
+                  </button>
+                )
+              })}
+            </div>
 
-      {/* Grid */}
-      {filtered.length === 0 ? (
-        <div className="py-16 text-center text-gray-400">
-          <p className="text-base font-medium text-gray-600 mb-1">No talks found</p>
-          <p className="text-sm">Try a different keyword or clear the filter.</p>
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-2 sm:grid-cols-3 mb-10 lg:grid-cols-5 gap-3">
-            {visible.map((card, i) => {
-              const resolvedId = card.seriesId || card.id
-              const subtalkCount = subtalksMap[resolvedId]?.length || 0
-              return (
-                <TalkCard
-                  key={card.id ?? i}
-                  card={card}
-                  query={query}
-                  subtalkCount={subtalkCount}
-                  onClick={() => openModal(card)}
-                />
-              )
-            })}
+            <div className="flex items-center gap-2 border border-red-300 rounded-full px-3.5 h-9 w-48 shrink-0 bg-white focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition-all duration-150">
+              <Search size={13} className="text-red-400 shrink-0" />
+              <input
+                type="text" value={query} onChange={handleQuery}
+                placeholder="Search talks…"
+                className="flex-1 bg-transparent outline-none text-[0.8rem] text-gray-700 placeholder-red-300 min-w-0"
+              />
+              {query && (
+                <button onClick={handleClear} aria-label="Clear search">
+                  <X size={12} className="text-red-400 hover:text-red-600 transition-colors" />
+                </button>
+              )}
+            </div>
           </div>
 
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-2 mt-6 mb-10 flex-wrap">
-              <button
-                onClick={() => goToPage(page - 1)} disabled={page === 1}
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[0.82rem] font-semibold transition-all duration-150 ${
-                  page === 1 ? 'text-gray-300 cursor-not-allowed bg-gray-100' : 'text-red-500 border border-red-400 hover:bg-red-50 active:scale-[.97]'
-                }`}
-              >
-                <ArrowLeft size={14} /> Prev
-              </button>
+          {/* Result meta */}
+          <p className="text-[0.75rem] text-gray-400 mb-4">
+            {filtered.length === talks.length
+              ? <>Showing <span className="text-gray-600 font-medium">{PAGE_SIZE}</span> of <span className="text-gray-600 font-medium">{talks.length}</span> talks (Page <span className="text-gray-600 font-medium">{totalPages > 0 ? page : 0}</span> of <span className="text-gray-600 font-medium">{totalPages}</span>)</>
+              : <><span className="text-gray-600 font-medium">{filtered.length}</span> result{filtered.length !== 1 ? 's' : ''} found (Page <span className="text-gray-600 font-medium">{totalPages > 0 ? page : 0}</span> of <span className="text-gray-600 font-medium">{totalPages}</span>)</>
+            }
+          </p>
 
-              <div className="flex gap-1">
-                {(() => {
-                  const pages = []
-                  if (totalPages <= 5) {
-                    for (let i = 1; i <= totalPages; i++) pages.push(i)
-                  } else {
-                    pages.push(1)
-                    const s = Math.max(2, page - 1)
-                    const e = Math.min(totalPages - 1, page + 1)
-                    if (s > 2) pages.push('...')
-                    for (let i = s; i <= e; i++) pages.push(i)
-                    if (e < totalPages - 1) pages.push('...')
-                    pages.push(totalPages)
-                  }
-                  return pages.map((p, idx) => (
-                    p === '...' ? (
-                      <span key={`e-${idx}`} className="text-gray-400 px-1">…</span>
-                    ) : (
-                      <button
-                        key={p} onClick={() => goToPage(p)}
-                        className={`inline-flex items-center justify-center rounded-lg w-9 h-9 text-[0.82rem] font-semibold transition-all duration-150 ${
-                          page === p ? 'bg-red-400 text-white' : 'text-gray-600 border border-gray-300 hover:border-red-400 hover:text-red-500 active:scale-[.97]'
-                        }`}
-                      >
-                        {p}
-                      </button>
-                    )
-                  ))
-                })()}
+          {/* Grid */}
+          {filtered.length === 0 ? (
+            <div className="py-16 text-center text-gray-400">
+              <p className="text-base font-medium text-gray-600 mb-1">No talks found</p>
+              <p className="text-sm">Try a different keyword or clear the filter.</p>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-3 mb-10 lg:grid-cols-3 gap-3">
+                {visible.map((card, i) => {
+                  const resolvedId = card.seriesId || card.id
+                  const subtalkCount = subtalksMap[resolvedId]?.length || 0
+                  return (
+                    <TalkCard
+                      key={card.id ?? i}
+                      card={card}
+                      query={query}
+                      subtalkCount={subtalkCount}
+                      onClick={() => openModal(card)}
+                    />
+                  )
+                })}
               </div>
 
-              <button
-                onClick={() => goToPage(page + 1)} disabled={page === totalPages}
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[0.82rem] font-semibold transition-all duration-150 ${
-                  page === totalPages ? 'text-gray-300 cursor-not-allowed bg-gray-100' : 'text-red-500 border border-red-400 hover:bg-red-50 active:scale-[.97]'
-                }`}
-              >
-                Next <ArrowRight size={14} />
-              </button>
-            </div>
+              {totalPages > 1 && (
+                <div className="flex justify-center items-center gap-2 mt-6 mb-10 flex-wrap">
+                  <button
+                    onClick={() => goToPage(page - 1)} disabled={page === 1}
+                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[0.82rem] font-semibold transition-all duration-150 ${page === 1 ? 'text-gray-300 cursor-not-allowed bg-gray-100' : 'text-red-500 border border-red-400 hover:bg-red-50 active:scale-[.97]'
+                      }`}
+                  >
+                    <ArrowLeft size={14} /> Prev
+                  </button>
+
+                  <div className="flex gap-1">
+                    {(() => {
+                      const pages = []
+                      if (totalPages <= 5) {
+                        for (let i = 1; i <= totalPages; i++) pages.push(i)
+                      } else {
+                        pages.push(1)
+                        const s = Math.max(2, page - 1)
+                        const e = Math.min(totalPages - 1, page + 1)
+                        if (s > 2) pages.push('...')
+                        for (let i = s; i <= e; i++) pages.push(i)
+                        if (e < totalPages - 1) pages.push('...')
+                        pages.push(totalPages)
+                      }
+                      return pages.map((p, idx) => (
+                        p === '...' ? (
+                          <span key={`e-${idx}`} className="text-gray-400 px-1">…</span>
+                        ) : (
+                          <button
+                            key={p} onClick={() => goToPage(p)}
+                            className={`inline-flex items-center justify-center rounded-lg w-9 h-9 text-[0.82rem] font-semibold transition-all duration-150 ${page === p ? 'bg-red-400 text-white' : 'text-gray-600 border border-gray-300 hover:border-red-400 hover:text-red-500 active:scale-[.97]'
+                              }`}
+                          >
+                            {p}
+                          </button>
+                        )
+                      ))
+                    })()}
+                  </div>
+
+                  <button
+                    onClick={() => goToPage(page + 1)} disabled={page === totalPages}
+                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[0.82rem] font-semibold transition-all duration-150 ${page === totalPages ? 'text-gray-300 cursor-not-allowed bg-gray-100' : 'text-red-500 border border-red-400 hover:bg-red-50 active:scale-[.97]'
+                      }`}
+                  >
+                    Next <ArrowRight size={14} />
+                  </button>
+                </div>
+              )}
+            </>
           )}
-        </>
-      )}
-      </div>
+        </div>
       </div>
     </section>
   )
@@ -1210,7 +1207,7 @@ function TalkCard({ card, query, onClick, subtalkCount = 0 }) {
                  hover:-translate-y-1 hover:border-red-200
                  hover:shadow-[0_10px_32px_rgba(229,62,62,0.12)]
                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300
-                 flex flex-col h-full relative"
+                 flex flex-col relative"
     >
       {/* Subtalk count badge */}
       {subtalkCount > 0 && (
@@ -1226,20 +1223,25 @@ function TalkCard({ card, query, onClick, subtalkCount = 0 }) {
         </div>
       )}
 
-      {/* Image / gradient banner */}
+      {/* Square image */}
       <div
-        className="flex items-center justify-center relative overflow-hidden h-40"
-        style={{ background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})` }}
+        className="relative overflow-hidden w-full"
+        style={{
+          aspectRatio: '16 / 9',
+          background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})`,
+        }}
       >
         {imageUrl ? (
           <img src={imageUrl} alt={title} loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         ) : (
-          <span className="text-4xl transition-transform duration-500 group-hover:scale-110 relative z-[1]">
-            {emoji}
-          </span>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-5xl transition-transform duration-500 group-hover:scale-110">
+              {emoji}
+            </span>
+          </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
       </div>
 
       {/* Body */}
@@ -1254,10 +1256,10 @@ function TalkCard({ card, query, onClick, subtalkCount = 0 }) {
             </span>
           )}
         </div>
-        <h4 className="text-[0.78rem] font-bold text-gray-900 leading-snug line-clamp-2">
+        <h4 className="text-[0.82rem] font-bold text-gray-900 leading-snug line-clamp-2">
           <Highlighted text={title} query={query} />
         </h4>
-        <p className="text-[0.68rem] text-gray-500 line-clamp-2 flex-1">{description}</p>
+        <p className="text-[0.68rem] text-gray-500 line-clamp-2">{description}</p>
       </div>
     </div>
   )

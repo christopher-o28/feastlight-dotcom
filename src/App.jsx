@@ -32,7 +32,7 @@ export default function App() {
     hangouts,
     equipping,
     fulltank,
-    podcasts,       // ← ADDED
+    podcasts,
     locations,
   } = data
 
@@ -55,26 +55,26 @@ export default function App() {
         {/* 2. About / Card Grid */}
         <AboutSection cards={aboutCards} />
 
-        {/* 3. Latest Series */}
+        {/* 3. Locations */}
+        <LocationGrid locations={locations} />
+
+        {/* 4. Latest Series */}
         <LatestSeriesSection series={latestSeries} />
 
-        {/* 4. Suggested Talks */}
+        {/* 5. Suggested Talks */}
         <SuggestedTalksSection talks={talkSeries} />
 
-        {/* 5. CTA */}
+        {/* 6. CTA */}
         <CTASection cta={cta} />
 
-        {/* 6. Hangouts */}
+        {/* 7. Hangouts */}
         <HangoutsSection hangouts={hangouts} />
 
-        {/* 7. Equipping Series */}
+        {/* 8. Equipping Series */}
         <EquippingSection equipping={equipping} />
 
-        {/* 8. Fulltank + Podcasts */}
+        {/* 9. Fulltank + Podcasts */}
         <FulltankSection fulltank={fulltank} podcasts={podcasts} />  {/* ← ADDED podcasts */}
-
-        {/* 9. Locations */}
-        <LocationGrid locations={locations} />
 
         {/* 10. FAQ */}
         <FAQSection />

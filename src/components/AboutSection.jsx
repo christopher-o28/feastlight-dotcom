@@ -124,7 +124,7 @@ export default function AboutSection({ cards }) {
 
         {/* Header */}
         <AnimatedSection className="mb-14">
-          <div className="section-label text-3xl ">Who We Are</div>
+          <div className="section-label text-center text-5xl">Who We Are</div>
         </AnimatedSection>
 
         {/* Alternating Rows */}
