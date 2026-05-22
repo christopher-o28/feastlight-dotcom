@@ -52,20 +52,20 @@ export default function App() {
         {/* 1. Hero */}
         <HeroSection settings={siteSettings} />
 
-        {/* 2. About / Card Grid */}
+        {/* 2. CTA */}
+        <CTASection cta={cta} />
+
+        {/* 3. About / Card Grid */}
         <AboutSection cards={aboutCards} />
 
-        {/* 3. Locations */}
+        {/* 4. Locations */}
         <LocationGrid locations={locations} />
 
-        {/* 4. Latest Series */}
+        {/* 5. Latest Series */}
         <LatestSeriesSection series={latestSeries} />
 
-        {/* 5. Suggested Talks */}
+        {/* 6. Suggested Talks */}
         <SuggestedTalksSection talks={talkSeries} />
-
-        {/* 6. CTA */}
-        <CTASection cta={cta} />
 
         {/* 7. Hangouts */}
         <HangoutsSection hangouts={hangouts} />
