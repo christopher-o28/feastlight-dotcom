@@ -22,7 +22,7 @@ export default function LoadingScreen() {
           <div className="w-20 h-20 bg-gradient-to-br  to-feast-red/80 rounded-full flex items-center justify-center
                           ">
             <img
-              src="https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/1%20The%20FeastLight%20Archives%20/Images%20/Feast-Light-Logo-Rebrand-FINAL.png"
+              src="https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/01%20The%20FeastLight%20Archives%20/Images%20/Feast-Light-Logo-Rebrand-FINAL.png"
               alt="Feast Light Logo"
               className="animationLogoLink w-50 h-50 object-contain"
             />
