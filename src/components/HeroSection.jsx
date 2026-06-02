@@ -17,7 +17,7 @@ export default function HeroSection({ settings }) {
   return (
     <section
       id="home"
-      className="relative min-h-[90vh] max-h-[900px] flex items-center overflow-hidden bg-feast-dark"
+      className="relative min-h-[90vh] max-h-100px flex items-center overflow-hidden bg-feast-dark"
     >
       {/* Background */}
       {heroVideoUrl ? (

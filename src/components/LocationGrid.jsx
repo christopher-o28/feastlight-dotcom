@@ -33,7 +33,7 @@ function DistrictLocationCard({ districtLocation }) {
       <div className="flex items-start gap-3 mb-3">
         <div className="w-9 h-9 rounded-lg bg-feast-red/10 border border-feast-red/20
                         flex items-center justify-center p-1.5 flex-shrink-0">
-          <img src="https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/1%20The%20FeastLight%20Archives%20/Images%20/Feast-Light-Logo-Rebrand-FINAL.png" alt="Feast Light" className="w-full h-full object-contain opacity-80" />
+          <img src="https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/01%20The%20FeastLight%20Archives%20/Images%20/Feast-Light-Logo-Rebrand-FINAL.png" alt="Feast Light" className="w-full h-full object-contain opacity-80" />
         </div>
         <h4 className="font-display font-bold text-white text-sm leading-snug pt-1">{name}</h4>
       </div>

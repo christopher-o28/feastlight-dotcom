@@ -43,7 +43,7 @@ export default function Footer({ settings }) {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                 <img
-                  src="https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/1%20The%20FeastLight%20Archives%20/Images%20/Feast-Light-Logo-Rebrand-FINAL.png"
+                  src="https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/01%20The%20FeastLight%20Archives%20/Images%20/Feast-Light-Logo-Rebrand-FINAL.png"
                   alt="Logo"
                   className="w-full h-full object-cover"
                 />
@@ -122,7 +122,7 @@ export default function Footer({ settings }) {
             <a href={privacyPolicyUrl} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
               Privacy Policy
             </a>
-            
+
           </div>
         </div>
       </div>
