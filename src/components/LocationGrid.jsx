@@ -168,7 +168,7 @@ function SubLocationSection({ subLocation }) {
       >
         <div className="flex items-center gap-3">
           <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
-            <img src="https://feastlight.com/wp-content/uploads/2022/01/Feast-Light-Logo-x152.png" alt="Feast Light" className="w-full h-full object-contain opacity-70" />
+            <img src="https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/01%20The%20FeastLight%20Archives%20/Images%20/Feast-Light-Logo-Rebrand-FINAL.png" alt="Feast Light" className="w-full h-full object-contain opacity-70" />
           </div>
           <div className="text-left">
             <h4 className="font-display font-bold text-white text-lg tracking-wide">{name}</h4>
@@ -204,7 +204,7 @@ function SubRegionSection({ subRegion, isExpanded, onToggle }) {
       >
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded bg-feast-red/10 border border-feast-red/20 p-1 flex items-center justify-center flex-shrink-0">
-            <img src="https://feastlight.com/wp-content/uploads/2022/01/Feast-Light-Logo-x152.png" alt="Feast Light" className="w-full h-full object-contain opacity-80" />
+            <img src="https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/01%20The%20FeastLight%20Archives%20/Images%20/Feast-Light-Logo-Rebrand-FINAL.png" alt="Feast Light" className="w-full h-full object-contain opacity-80" />
           </div>
           <div className="text-left">
             <h3 className="font-display font-bold text-white text-lg">{name}</h3>
