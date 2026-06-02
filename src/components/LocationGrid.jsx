@@ -33,7 +33,7 @@ function DistrictLocationCard({ districtLocation }) {
       <div className="flex items-start gap-3 mb-3">
         <div className="w-9 h-9 rounded-lg bg-feast-red/10 border border-feast-red/20
                         flex items-center justify-center p-1.5 flex-shrink-0">
-          <img src="https://feastlight.com/wp-content/uploads/2022/01/Feast-Light-Logo-x152.png" alt="Feast Light" className="w-full h-full object-contain opacity-80" />
+          <img src="https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/1%20The%20FeastLight%20Archives%20/Images%20/Feast-Light-Logo-Rebrand-FINAL.png" alt="Feast Light" className="w-full h-full object-contain opacity-80" />
         </div>
         <h4 className="font-display font-bold text-white text-sm leading-snug pt-1">{name}</h4>
       </div>
@@ -179,7 +179,7 @@ function SubLocationSection({ subLocation }) {
           {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </div>
       </button>
-      
+
       <div className={`transition-all duration-300 ease-in-out overflow-hidden ${isExpanded ? 'max-h-[9999px] opacity-100 border-t border-white/10' : 'max-h-0 opacity-0'}`}>
         <div className="p-4 sm:p-5 bg-black/20">
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
@@ -231,7 +231,7 @@ function SubRegionSection({ subRegion, isExpanded, onToggle }) {
           {subRegion.subLocations && subRegion.subLocations.filter(sl => sl.byDistrictLocations?.length > 0).map((subLoc, i) => (
             <SubLocationSection key={`acc-${subLoc.id || i}`} subLocation={subLoc} />
           ))}
-          
+
           {/* Districts (which are also accordions) */}
           {subRegion.byDistrictLocation && subRegion.byDistrictLocation.length > 0 && (
             <>
