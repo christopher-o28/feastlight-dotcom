@@ -4,7 +4,7 @@ import AnimatedSection from './AnimatedSection'
 const sections = [
   {
     id: 1,
-    imageLink: 'https://feastlight.com/wp-content/uploads/2022/01/What-is-FeastVideo.jpg',
+    imageLink: 'https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/1%20The%20FeastLight%20Archives%20/Images%20/What-is-FeastLight.jpg',
     imageRight: false,
     content: (
       <>
