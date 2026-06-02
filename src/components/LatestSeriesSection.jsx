@@ -15,8 +15,8 @@ export default function LatestSeriesSection({ series }) {
   const imageUrl = sheetImageUrl || '/called_to_witness.png';
 
   return (
-    <section id="series" className="pt-16 pb-24 px-8 bg-white mt-2">
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
+    <section id="series" className="py-24 px-4 bg-white mt-2">
+      <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
           {/* Left */}
           <AnimatedSection className="lg:col-span-6 xl:col-span-5">
@@ -39,10 +39,10 @@ export default function LatestSeriesSection({ series }) {
 
           {/* Right: Artwork */}
           <AnimatedSection delay={0.2} className="lg:col-span-6 xl:col-span-7">
-            <div className={`rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.18)] relative
-                            bg-gradient-to-br from-[#1a1a2e] to-[#302b63] flex items-center justify-center ${!imageUrl ? 'aspect-[4/3]' : ''}`}>
+            <div className={`rounded-xl lg:rounded-3xl overflow-hidden shadow-[0_10px_32px_rgba(0,0,0,0.12)] lg:shadow-[0_20px_60px_rgba(0,0,0,0.18)] relative
+                            bg-gradient-to-br from-[#1a1a2e] to-[#302b63] flex items-center justify-center aspect-[16/9]`}>
               {imageUrl ? (
-                <img src={imageUrl} alt={title} className="w-full h-auto" />
+                <img src={imageUrl} alt={title} className="absolute inset-0 w-full h-full object-cover" />
               ) : (
                 <>
                   <span className="absolute top-4 right-6 text-[8rem] font-black text-white opacity-[0.06] select-none leading-none"></span>
