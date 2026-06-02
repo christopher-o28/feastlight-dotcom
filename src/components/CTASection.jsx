@@ -6,7 +6,7 @@ export default function CTASection({ cta }) {
   const {
     title = 'Do You Want to Nourish Your Home or Village with Goodness & Hope?',
     body = "You don't need a big stage or a large congregation. All you need is a willing heart and an open door. Start a Feast Light in your home today.",
-    graphicImage = 'https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/1%20The%20FeastLight%20Archives%20/Images%20/Do-You-Want-To-Nourish-Your-Village.jpg',
+    graphicImage = 'https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/01%20The%20FeastLight%20Archives%20/Images%20/Do-You-Want-To-Nourish-Your-Village.jpg',
     buildUrl = 'https://tally.so/r/wdjq5o',
     updateUrl = 'https://tally.so/r/w2vE7j',
   } = cta || {}
