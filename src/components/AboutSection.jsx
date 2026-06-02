@@ -22,7 +22,7 @@ const sections = [
   },
   {
     id: 2,
-    imageLink: 'https://feastlight.com/wp-content/uploads/2022/01/Mission2.jpg',
+    imageLink: 'https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/1%20The%20FeastLight%20Archives%20/Images%20/Feastlight-Mission.jpg',
     imageRight: true,
     content: (
       <>
@@ -35,7 +35,7 @@ const sections = [
   },
   {
     id: 3,
-    imageLink: 'https://feastlight.com/wp-content/uploads/2022/01/Vision.jpg',
+    imageLink: 'https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/1%20The%20FeastLight%20Archives%20/Images%20/Vision-Feaslight.jpg',
     imageRight: false,
     content: (
       <>
@@ -51,7 +51,7 @@ const sections = [
   },
   {
     id: 4,
-    imageLink: 'https://feastlight.com/wp-content/uploads/2022/01/The-Feast.jpg',
+    imageLink: 'https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/1%20The%20FeastLight%20Archives%20/Images%20/The-Feast-You-Are-Loved.jpg',
     imageRight: true,
     content: (
       <>
@@ -70,7 +70,7 @@ const sections = [
   },
   {
     id: 5,
-    imageLink: 'https://feastlight.com/wp-content/uploads/2022/01/LOJ-TODAY.jpg',
+    imageLink: 'https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/1%20The%20FeastLight%20Archives%20/Images%20/LOJ-TODAY.jpg',
     imageRight: false,
     content: (
       <>
