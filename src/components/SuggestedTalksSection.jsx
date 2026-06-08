@@ -39,7 +39,7 @@ export async function fetchSubtalksFromSheet(sheetCsvUrl) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
     const text = await res.text()
-    const rows = text.trim().split('\n').map(row => parseCSVRow(row))
+    const rows = parseCSV(text.trim())
     const [header, ...dataRows] = rows
 
     const result = dataRows
@@ -55,8 +55,8 @@ export async function fetchSubtalksFromSheet(sheetCsvUrl) {
         discussionGuideQrUrl: (row[7] || '').trim(),
         talkSlidesUrl: (row[8] || '#').trim(),
         talkSlidesQrUrl: (row[9] || '').trim(),
-        keyMessage: (row[10] || '').trim(),
-        quote: (row[11] || '').trim(),
+        keyMessage: (row[10] || ''),
+        quote: (row[11] || ''),
         description: (row[12] || '').trim(),
       }))
 
@@ -68,23 +68,61 @@ export async function fetchSubtalksFromSheet(sheetCsvUrl) {
   }
 }
 
-function parseCSVRow(row) {
-  const result = []
+// Full multiline-aware CSV parser – handles quoted fields with newlines,
+// preserving line breaks, indentation, and spacing from Google Sheet cells.
+function parseCSV(text) {
+  const rows = []
+  let currentRow = []
   let current = ''
   let inQuotes = false
-  for (let i = 0; i < row.length; i++) {
-    const ch = row[i]
-    if (ch === '"') {
-      if (inQuotes && row[i + 1] === '"') { current += '"'; i++ }
-      else inQuotes = !inQuotes
-    } else if (ch === ',' && !inQuotes) {
-      result.push(current); current = ''
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i]
+
+    if (inQuotes) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') {
+          // escaped quote ""
+          current += '"'
+          i++
+        } else {
+          // closing quote
+          inQuotes = false
+        }
+      } else {
+        // preserve everything inside quotes, including newlines
+        current += ch
+      }
     } else {
-      current += ch
+      if (ch === '"') {
+        inQuotes = true
+      } else if (ch === ',') {
+        currentRow.push(current)
+        current = ''
+      } else if (ch === '\n' || (ch === '\r' && text[i + 1] === '\n')) {
+        if (ch === '\r') i++ // skip \r in \r\n
+        currentRow.push(current)
+        rows.push(currentRow)
+        currentRow = []
+        current = ''
+      } else if (ch === '\r') {
+        currentRow.push(current)
+        rows.push(currentRow)
+        currentRow = []
+        current = ''
+      } else {
+        current += ch
+      }
     }
   }
-  result.push(current)
-  return result
+
+  // push last field and row
+  currentRow.push(current)
+  if (currentRow.length > 1 || currentRow[0] !== '') {
+    rows.push(currentRow)
+  }
+
+  return rows
 }
 
 // ─── Highlight matched text ───────────────────────────────────────────────────
@@ -161,18 +199,46 @@ function TalkVideoPlayer({ url, talkNumber, description, thumbnailUrl }) {
   const [active, setActive] = useState(false)
   const embedUrl = getEmbedUrl(url)
   const isDirect = isDirectVideo(url)
-  const hasVideo = !!(url && (embedUrl || isDirect))
+  const hasVideo = !!(url && url.toLowerCase() !== 'none' && (embedUrl || isDirect))
+
+  const [aspectRatio, setAspectRatio] = useState('16/9')
+
+  useEffect(() => {
+    if (thumbnailUrl && thumbnailUrl.toLowerCase() !== 'none') {
+      const img = new Image()
+      img.src = thumbnailUrl
+      img.onload = () => {
+        const ratio = img.naturalWidth / img.naturalHeight
+        if (Math.abs(ratio - 1) < 0.25) {
+          setAspectRatio('1/1')
+        } else {
+          setAspectRatio('16/9')
+        }
+      }
+    }
+  }, [thumbnailUrl])
 
   const containerStyle = {
     borderRadius: 14, overflow: 'hidden', position: 'relative',
     background: '#0a0a14', border: '1px solid rgba(255,255,255,.07)',
-    aspectRatio: '16/9', display: 'flex', alignItems: 'center', justifyContent: 'center',
+    aspectRatio: aspectRatio, display: 'flex', alignItems: 'center', justifyContent: 'center',
+  }
+
+  if (!hasVideo) {
+    if (thumbnailUrl && thumbnailUrl.toLowerCase() !== 'none') {
+      return (
+        <div style={containerStyle}>
+          <img src={thumbnailUrl} alt={talkNumber || 'Talk thumbnail'} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+        </div>
+      )
+    }
+    return null
   }
 
   if (active && hasVideo) {
     if (embedUrl) {
       return (
-        <div style={containerStyle}>
+        <div style={{ ...containerStyle, aspectRatio: '16/9' }}>
           <iframe src={embedUrl} title={talkNumber || 'Talk video'}
             allow="autoplay; fullscreen; picture-in-picture" allowFullScreen
             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }} />
@@ -181,7 +247,7 @@ function TalkVideoPlayer({ url, talkNumber, description, thumbnailUrl }) {
     }
     if (isDirect) {
       return (
-        <div style={containerStyle}>
+        <div style={{ ...containerStyle, aspectRatio: '16/9' }}>
           <video src={url} controls autoPlay
             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', background: '#000' }} />
         </div>
@@ -228,7 +294,23 @@ function TalkVideoPlayer({ url, talkNumber, description, thumbnailUrl }) {
 // A single row inside the SubtalksPanel, with its own mini video+resources modal
 
 function SubtalkRow({ subtalk, onOpen, isStatic = false }) {
-  const hasVideo = !!(subtalk.talkVideoUrl)
+  const hasVideo = !!(subtalk.talkVideoUrl && subtalk.talkVideoUrl.toLowerCase() !== 'none')
+  const [aspectRatio, setAspectRatio] = useState('4/3')
+
+  useEffect(() => {
+    if (subtalk.talkThumbnailUrl && subtalk.talkThumbnailUrl.toLowerCase() !== 'none') {
+      const img = new Image()
+      img.src = subtalk.talkThumbnailUrl
+      img.onload = () => {
+        const ratio = img.naturalWidth / img.naturalHeight
+        if (Math.abs(ratio - 1) < 0.25) {
+          setAspectRatio('1/1')
+        } else {
+          setAspectRatio('16/9')
+        }
+      }
+    }
+  }, [subtalk.talkThumbnailUrl])
 
   const baseStyle = isStatic
     ? {
@@ -275,7 +357,7 @@ function SubtalkRow({ subtalk, onOpen, isStatic = false }) {
     >
       {/* Thumbnail or icon */}
       <div style={{
-        width: 64, height: 48, borderRadius: 8, overflow: 'hidden', flexShrink: 0,
+        height: 48, aspectRatio: aspectRatio, borderRadius: 8, overflow: 'hidden', flexShrink: 0,
         background: '#0d1a12', border: '1.5px solid rgba(255,107,107,.25)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative',
         boxShadow: '0 4px 12px rgba(255,107,107,.1)',
@@ -284,7 +366,7 @@ function SubtalkRow({ subtalk, onOpen, isStatic = false }) {
           ? <img src={subtalk.talkThumbnailUrl} alt={subtalk.talkTitle} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           : <div style={{ width: 0, height: 0, borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderLeft: hasVideo ? '10px solid rgba(255,107,107,.7)' : '10px solid rgba(255,255,255,.2)', marginLeft: 2 }} />
         }
-        {subtalk.talkThumbnailUrl && (
+        {subtalk.talkThumbnailUrl && hasVideo && (
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ width: 0, height: 0, borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderLeft: '9px solid rgba(255,255,255,.8)', marginLeft: 2 }} />
           </div>
@@ -316,7 +398,23 @@ function SubtalkRow({ subtalk, onOpen, isStatic = false }) {
 // Card display for subtalks in grid layout at the bottom of modal
 
 function SubtalkCard({ subtalk, onOpen }) {
-  const hasVideo = !!(subtalk.talkVideoUrl)
+  const hasVideo = !!(subtalk.talkVideoUrl && subtalk.talkVideoUrl.toLowerCase() !== 'none')
+  const [aspectRatio, setAspectRatio] = useState('16/9')
+
+  useEffect(() => {
+    if (subtalk.talkThumbnailUrl && subtalk.talkThumbnailUrl.toLowerCase() !== 'none') {
+      const img = new Image()
+      img.src = subtalk.talkThumbnailUrl
+      img.onload = () => {
+        const ratio = img.naturalWidth / img.naturalHeight
+        if (Math.abs(ratio - 1) < 0.25) {
+          setAspectRatio('1/1')
+        } else {
+          setAspectRatio('16/9')
+        }
+      }
+    }
+  }, [subtalk.talkThumbnailUrl])
 
   return (
     <div
@@ -350,7 +448,7 @@ function SubtalkCard({ subtalk, onOpen }) {
       {/* Thumbnail */}
       <div style={{
         width: '100%',
-        height: 120,
+        aspectRatio: aspectRatio,
         overflow: 'hidden',
         background: '#0d1a12',
         position: 'relative',
@@ -364,7 +462,7 @@ function SubtalkCard({ subtalk, onOpen }) {
             <div style={{ width: 0, height: 0, borderTop: '12px solid transparent', borderBottom: '12px solid transparent', borderLeft: hasVideo ? '20px solid rgba(255,107,107,.6)' : '20px solid rgba(255,255,255,.2)', marginLeft: 4 }} />
           </div>
         }
-        {subtalk.talkThumbnailUrl && (
+        {subtalk.talkThumbnailUrl && hasVideo && (
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ width: 0, height: 0, borderTop: '8px solid transparent', borderBottom: '8px solid transparent', borderLeft: '14px solid rgba(255,255,255,.8)', marginLeft: 2 }} />
           </div>
@@ -501,7 +599,7 @@ function SubtalkModal({ subtalk, seriesCard, onClose }) {
                   background: 'rgba(229,62,62,.07)', borderRadius: 8, border: '1px solid rgba(229,62,62,.15)',
                 }}>
                   <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#e53e3e', marginTop: 5, flexShrink: 0 }} />
-                  <div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,.52)', lineHeight: 1.6 }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,.52)', lineHeight: 1.6, whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}>
                     {subtalk.keyMessage}
                   </div>
                 </div>
@@ -675,7 +773,7 @@ function SubtalksPanel({ seriesId, seriesCard, subtalksMap, isLoading }) {
                       marginBottom: 16,
                     }}>
                       <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,.5)', marginTop: 5, flexShrink: 0 }} />
-                      <div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,.9)', lineHeight: 1.6 }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,.9)', lineHeight: 1.6, whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}>
                         {st.keyMessage}
                       </div>
                     </div>
