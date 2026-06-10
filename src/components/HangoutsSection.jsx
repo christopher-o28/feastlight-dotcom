@@ -12,13 +12,12 @@ function HangoutCard({ card }) {
     gradientFrom = '#1a1a2e',
     gradientTo = '#302b63',
     downloadUrl = '#',
-    
   } = card
 
   const [expanded, setExpanded] = useState(false)
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-gray-100 flex flex-col h-full
+    <div className="bg-white rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-gray-100 flex flex-col
                     transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(255,75,75,0.15)]">
       {/* Image */}
       <div
@@ -56,6 +55,7 @@ function HangoutCard({ card }) {
 
         {/* Footer Actions */}
         <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
+          
           <a
             href={downloadUrl}
             target="_blank"
@@ -63,7 +63,7 @@ function HangoutCard({ card }) {
             className="flex items-center gap-1.5 text-feast-red hover:text-feast-red-dark transition-colors text-xs font-semibold"
           >
             <Download size={14} /> Download
-          </a>
+          </a> 
         </div>
       </div>
     </div>
