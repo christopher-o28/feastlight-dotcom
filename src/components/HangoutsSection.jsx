@@ -12,7 +12,7 @@ function HangoutCard({ card }) {
     gradientFrom = '#1a1a2e',
     gradientTo = '#302b63',
     downloadUrl = '#',
-    viewMoreUrl = '#',
+    
   } = card
 
   const [expanded, setExpanded] = useState(false)
@@ -40,7 +40,7 @@ function HangoutCard({ card }) {
 
         {description && (
           <div className="mb-4">
-            <p className={`text-gray-500 text-sm leading-relaxed transition-all duration-300 ${expanded ? '' : 'line-clamp-3'}`}>
+            <p className={`text-gray-500 text-sm leading-relaxed transition-all duration-300 whitespace-pre-wrap ${expanded ? '' : 'line-clamp-3'}`}>
               {description}
             </p>
             <button
@@ -83,6 +83,9 @@ export default function HangoutsSection({ hangouts, hangoutsSettings }) {
     body = 'What are the Hangouts Videos?\nThis is the Feast Video designed for the Youth. It includes a 2 – 5 minute Feast Video Clip, Activity modules for the Facilitator, and Lyric Videos that you could use for the worship.',
   } = hangoutsSettings || {}
 
+  // Normalize newlines from Google Sheets (may arrive as literal \n string)
+  const normalizedBody = body?.replace(/\\n/g, '\n') ?? ''
+
   // Filter out any empty rows from the Google Sheet (requires a non-empty title)
   const validHangouts = hangouts?.filter(card => card.title && card.title.trim() !== '') || []
 
@@ -104,9 +107,9 @@ export default function HangoutsSection({ hangouts, hangoutsSettings }) {
         <AnimatedSection className="mb-12">
           <div className="section-label">{sectionLabel}</div>
           <h2 className="section-title">{title}</h2>
-          
+
           <div className="text-gray-500 text-base mt-3 leading-relaxed whitespace-pre-wrap">
-            {body}
+            {normalizedBody}
           </div>
         </AnimatedSection>
 
