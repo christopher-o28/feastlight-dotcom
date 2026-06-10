@@ -30,6 +30,7 @@ export default function App() {
     talkSeries,
     cta,
     hangouts,
+    hangoutsSettings,
     equipping,
     fulltank,
     podcasts,
@@ -68,7 +69,7 @@ export default function App() {
         <SuggestedTalksSection talks={talkSeries} />
 
         {/* 7. Hangouts */}
-        <HangoutsSection hangouts={hangouts} />
+        <HangoutsSection hangouts={hangouts} hangoutsSettings={hangoutsSettings} />
 
         {/* 8. Equipping Series */}
         <EquippingSection equipping={equipping} />

@@ -8,11 +8,14 @@ function HangoutCard({ card }) {
     title,
     imageUrl,
     emoji = '',
+    description = '',
     gradientFrom = '#1a1a2e',
     gradientTo = '#302b63',
     downloadUrl = '#',
     viewMoreUrl = '#',
   } = card
+
+  const [expanded, setExpanded] = useState(false)
 
   return (
     <div className="bg-white rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-gray-100 flex flex-col h-full
@@ -31,10 +34,26 @@ function HangoutCard({ card }) {
 
       {/* Body */}
       <div className="p-5 flex flex-col flex-grow">
-        <h4 className="font-body text-feast-red font-bold text-[1.15rem] leading-snug mb-6 hover:text-feast-red-dark transition-colors">
+        <h4 className="font-body text-feast-red font-bold text-[1.15rem] leading-snug mb-2 hover:text-feast-red-dark transition-colors">
           {title}
         </h4>
-        
+
+        {description && (
+          <div className="mb-4">
+            <p className={`text-gray-500 text-sm leading-relaxed transition-all duration-300 ${expanded ? '' : 'line-clamp-3'}`}>
+              {description}
+            </p>
+            <button
+              onClick={() => setExpanded(prev => !prev)}
+              className="mt-1.5 flex items-center gap-1 text-feast-red hover:text-feast-red-dark text-xs font-semibold transition-colors"
+              aria-label={expanded ? 'Show less' : 'Show more'}
+            >
+              <span className="text-base leading-none">{expanded ? '−' : '+'}</span>
+              {expanded ? 'Show less' : 'Show more'}
+            </button>
+          </div>
+        )}
+
         {/* Footer Actions */}
         <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
           <a
@@ -44,14 +63,6 @@ function HangoutCard({ card }) {
             className="flex items-center gap-1.5 text-feast-red hover:text-feast-red-dark transition-colors text-xs font-semibold"
           >
             <Download size={14} /> Download
-          </a>
-          <a
-            href={viewMoreUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-feast-red hover:text-feast-red-dark transition-colors text-xs font-semibold"
-          >
-            
           </a>
         </div>
       </div>
@@ -63,8 +74,14 @@ function HangoutCard({ card }) {
 
 const CARDS_PER_PAGE = 8
 
-export default function HangoutsSection({ hangouts }) {
+export default function HangoutsSection({ hangouts, hangoutsSettings }) {
   const [currentPage, setCurrentPage] = useState(1)
+
+  const {
+    sectionLabel = 'Connect',
+    title = 'Hangouts',
+    body = 'What are the Hangouts Videos?\nThis is the Feast Video designed for the Youth. It includes a 2 – 5 minute Feast Video Clip, Activity modules for the Facilitator, and Lyric Videos that you could use for the worship.',
+  } = hangoutsSettings || {}
 
   // Filter out any empty rows from the Google Sheet (requires a non-empty title)
   const validHangouts = hangouts?.filter(card => card.title && card.title.trim() !== '') || []
@@ -85,14 +102,11 @@ export default function HangoutsSection({ hangouts }) {
 
         {/* Heading */}
         <AnimatedSection className="mb-12">
-          <div className="section-label">Connect</div>
-          <h2 className="section-title">Hangouts</h2>
+          <div className="section-label">{sectionLabel}</div>
+          <h2 className="section-title">{title}</h2>
           
-          <div className="text-gray-500 text-base mt-3 leading-relaxed">
-            <ol className="">
-              <li>What are the Hangouts Videos?</li>
-             <li>This is the Feast Video designed for the Youth. It includes a 2 – 5 minute Feast Video Clip, Activity modules for the Facilitator, and Lyric Videos that you could use for the worship.</li>
-            </ol>
+          <div className="text-gray-500 text-base mt-3 leading-relaxed whitespace-pre-wrap">
+            {body}
           </div>
         </AnimatedSection>
 

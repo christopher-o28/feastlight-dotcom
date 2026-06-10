@@ -8,7 +8,7 @@
 //    - "AboutCards"     → the 4 info grid cards
 //    - "LatestSeries"   → current series info + download links
 //    - "TalkSeries"     → suggested talk cards
-//    - "Hangouts"       → hangout event cards
+//    - "Hangouts"       → hangout event cards (row 1 = section settings, rows 2+ = cards)
 //    - "Locations"      → location region cards
 //    - "SubRegions"     → sub-region details for each region
 //    - "SubLocations"   → city details for each sub-region
@@ -33,6 +33,7 @@
 //    LatestSeries:      title | subtitle | body | imageUrl | englishUrl | tagalogUrl
 //    TalkSeries:        id | title | description | tag | imageUrl | trailerUrl | discussionGuideUrl | talkSlidesUrl | qrCodeDiscussionGuide | qrCodeTalkSlides | gradientFrom | gradientTo
 //    Hangouts:          id | title | description | imageUrl | downloadUrl | viewMoreUrl | emoji
+//                       (Row 1: sectionLabel | title | body for section header, Rows 2+: hangout card data)
 //    Locations:         id | name | region | emoji | gradientFrom | gradientTo | link
 //    SubRegions:        id | parentLocationId | name | emoji
 //    SubLocations:      id | parentSubRegionId | name | emoji | address | phone | email | facebook | website
@@ -155,6 +156,11 @@ export const defaultData = {
     { id: '2', title: 'Family Feast', description: 'A monthly lunch fellowship where members and their families gather, share meals, and celebrate.', downloadUrl: '#', viewMoreUrl: '#', emoji: '🍽', gradientFrom: '#2d1515', gradientTo: '#6b2020' },
     { id: '3', title: 'Bible Study Circle', description: 'Dive deeper into Scripture with guided small-group discussions. Grow in wisdom together.', downloadUrl: '#', viewMoreUrl: '#', emoji: '📖', gradientFrom: '#0d2818', gradientTo: '#1a4a2e' },
   ],
+  hangoutsSettings: {
+    sectionLabel: 'Connect',
+    title: 'Hangouts',
+    body: '1. What are the Hangouts Videos?\n2. This is the Feast Video designed for the Youth. It includes a 2 – 5 minute Feast Video Clip, Activity modules for the Facilitator, and Lyric Videos that you could use for the worship.',
+  },
   equipping: {
     title: 'Equipping Series',
     body: 'The Equipping Series is designed for Feast Light leaders and coordinators called to serve their communities with excellence. Whether you\'re leading a home gathering or overseeing a village group, these talks provide practical tools, spiritual nourishment, and leadership frameworks rooted in the Gospel.',
@@ -393,6 +399,15 @@ export function useSheetData() {
       const equippingRow = equippingRows?.[0] ?? {}
       const ctaRow = ctaRows?.[0] ?? {}
 
+      // ── Extract Hangouts section settings from first row if present ────────
+      let hangoutsSettings = defaultData.hangoutsSettings
+      let hangoutCards = hangoutRows || []
+      
+      if (hangoutRows?.length > 0 && hangoutRows[0]?.sectionLabel) {
+        hangoutsSettings = hangoutRows[0]
+        hangoutCards = hangoutRows.slice(1)
+      }
+
       // ── Build hierarchical location data ───────────────────────────────────
       let locations = locationRows?.length ? locationRows : defaultData.locations
 
@@ -471,7 +486,8 @@ export function useSheetData() {
         latestSeries: latestSeriesRow.title ? latestSeriesRow : defaultData.latestSeries,
         talkSeries: talkRows?.length ? talkRows : defaultData.talkSeries,
         cta: ctaRow.title ? ctaRow : defaultData.cta,
-        hangouts: hangoutRows?.length ? hangoutRows : defaultData.hangouts,
+        hangouts: hangoutCards?.length ? hangoutCards : defaultData.hangouts,
+        hangoutsSettings: hangoutsSettings,
         equipping: equippingRow.title ? equippingRow : defaultData.equipping,
         fulltank: fulltankRow.youtubeId ? fulltankRow : defaultData.fulltank,
         podcasts: mapPodcastRows(podcastRows) ?? defaultData.podcasts,
