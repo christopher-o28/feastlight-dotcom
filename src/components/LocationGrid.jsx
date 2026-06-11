@@ -1,6 +1,6 @@
 // src/components/LocationGrid.jsx
 import { useState } from 'react'
-import { ChevronDown, ChevronUp, CalendarDays } from 'lucide-react'
+import { ChevronDown, ChevronUp} from 'lucide-react'
 import AnimatedSection, { StaggerChildren, StaggerItem } from './AnimatedSection'
 
 function DistrictLocationCard({ districtLocation }) {

@@ -605,8 +605,6 @@ function SubtalkModal({ subtalk, seriesCard, onClose }) {
                 </div>
               )}
 
-
-
               {/* Description */}
               {subtalk.description && (
                 <p style={{ fontSize: 13, color: 'rgba(255,255,255,.45)', lineHeight: 1.7, margin: 0 }}>
@@ -778,8 +776,6 @@ function SubtalksPanel({ seriesId, seriesCard, subtalksMap, isLoading }) {
                       </div>
                     </div>
                   )}
-
-
 
                   {/* Description */}
                   {st.description && (
@@ -977,32 +973,61 @@ function TalkModal({ card, allCards, onClose, onNavigate, subtalksMap, subtalksL
                             <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '8px 12px', background: 'rgba(255,255,255,.04)', borderRadius: 8, border: '1px solid rgba(255,255,255,.08)' }}>
                               <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: '#e53e3e', opacity: 0.8, minWidth: 40 }}>{st.talkNumber}</span>
                               <span style={{ fontSize: 12, color: 'rgba(255,255,255,.65)', flex: 1 }}>{st.talkTitle || st.description}</span>
-                              <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexShrink: 0 }}>
+
+                              {/* ── Download buttons: icons on mobile, text links on desktop ── */}
+                              <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
                                 {st.talkVideoUrlDownload && (
-                                  <a href={st.talkVideoUrlDownload} download target="_blank" rel="noreferrer" title="Download Video"
-                                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 26, height: 26, borderRadius: 6, background: '#fff', color: '#e53e3e', textDecoration: 'none', transition: 'background .15s' }}
-                                    onMouseEnter={e => e.currentTarget.style.background = '#f0f0f0'}
-                                    onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                                  <a href={st.talkVideoUrlDownload} download target="_blank" rel="noreferrer"
+                                    style={{ textDecoration: 'none', transition: 'opacity .15s' }}
+                                    onMouseEnter={e => e.currentTarget.style.opacity = '0.7'}
+                                    onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                                   >
-                                    <Download size={11} />
+                                    {/* Icon — mobile only (< 640px) */}
+                                    <span className="flex sm:hidden"
+                                      style={{ width: 26, height: 26, borderRadius: 6, background: '#fff', color: '#e53e3e', alignItems: 'center', justifyContent: 'center' }}>
+                                      <Download size={11} />
+                                    </span>
+                                    {/* Text — desktop only (≥ 640px) */}
+                                    <span className="hidden sm:inline"
+                                      style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,.7)', borderBottom: '1px solid rgba(255,255,255,.25)', paddingBottom: 1, whiteSpace: 'nowrap' }}>
+                                      Download Video
+                                    </span>
                                   </a>
                                 )}
                                 {st.talkSlidesUrl && st.talkSlidesUrl !== '#' && (
-                                  <a href={st.talkSlidesUrl} download target="_blank" rel="noreferrer" title="Download Talk Slide"
-                                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 26, height: 26, borderRadius: 6, background: '#e53e3e', color: '#fff', textDecoration: 'none', transition: 'background .15s' }}
-                                    onMouseEnter={e => e.currentTarget.style.background = '#c53030'}
-                                    onMouseLeave={e => e.currentTarget.style.background = '#e53e3e'}
+                                  <a href={st.talkSlidesUrl} download target="_blank" rel="noreferrer"
+                                    style={{ textDecoration: 'none', transition: 'opacity .15s' }}
+                                    onMouseEnter={e => e.currentTarget.style.opacity = '0.7'}
+                                    onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                                   >
-                                    <FileText size={11} />
+                                    {/* Icon — mobile only */}
+                                    <span className="flex sm:hidden"
+                                      style={{ width: 26, height: 26, borderRadius: 6, background: '#e53e3e', color: '#fff', alignItems: 'center', justifyContent: 'center' }}>
+                                      <FileText size={11} />
+                                    </span>
+                                    {/* Text — desktop only */}
+                                    <span className="hidden sm:inline"
+                                      style={{ fontSize: 11, fontWeight: 600, color: '#e53e3e', borderBottom: '1px solid rgba(229,62,62,.4)', paddingBottom: 1, whiteSpace: 'nowrap' }}>
+                                      Download Talk Slide
+                                    </span>
                                   </a>
                                 )}
                                 {st.discussionGuideUrl && st.discussionGuideUrl !== '#' && (
-                                  <a href={st.discussionGuideUrl} download target="_blank" rel="noreferrer" title="Download Discussion Guide"
-                                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 26, height: 26, borderRadius: 6, background: '#3b82f6', color: '#fff', textDecoration: 'none', transition: 'background .15s' }}
-                                    onMouseEnter={e => e.currentTarget.style.background = '#2563eb'}
-                                    onMouseLeave={e => e.currentTarget.style.background = '#3b82f6'}
+                                  <a href={st.discussionGuideUrl} download target="_blank" rel="noreferrer"
+                                    style={{ textDecoration: 'none', transition: 'opacity .15s' }}
+                                    onMouseEnter={e => e.currentTarget.style.opacity = '0.7'}
+                                    onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                                   >
-                                    <File size={11} />
+                                    {/* Icon — mobile only */}
+                                    <span className="flex sm:hidden"
+                                      style={{ width: 26, height: 26, borderRadius: 6, background: '#3b82f6', color: '#fff', alignItems: 'center', justifyContent: 'center' }}>
+                                      <File size={11} />
+                                    </span>
+                                    {/* Text — desktop only */}
+                                    <span className="hidden sm:inline"
+                                      style={{ fontSize: 11, fontWeight: 600, color: '#60a5fa', borderBottom: '1px solid rgba(96,165,250,.4)', paddingBottom: 1, whiteSpace: 'nowrap' }}>
+                                      Download Discussion Guide
+                                    </span>
                                   </a>
                                 )}
                               </div>
