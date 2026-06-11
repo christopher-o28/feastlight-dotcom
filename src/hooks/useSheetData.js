@@ -99,6 +99,7 @@ function mapLocationFields(row, fallbackId) {
     id: row.id || row.ID || row.Id || fallbackId,
     name: row.name || '',
     emoji: row.emoji || '',
+    schedule: row.schedule || row.Schedule || '',   // ← ADD THIS LINE
     address: row.address || '',
     phone: row.phone || '',
     email: row.email || row.Email || '',
@@ -112,6 +113,7 @@ function mapLocationFields(row, fallbackId) {
     personalContactNumber: row.personalContactNumber || row['Personal Contact Number'] || row['personal contact number'] || '',
   }
 }
+
 
 // ─── DEFAULT FALLBACK DATA (used when no Sheet ID is configured) ───────────
 export const defaultData = {
@@ -402,7 +404,7 @@ export function useSheetData() {
       // ── Extract Hangouts section settings from first row if present ────────
       let hangoutsSettings = defaultData.hangoutsSettings
       let hangoutCards = hangoutRows || []
-      
+
       if (hangoutRows?.length > 0 && hangoutRows[0]?.sectionLabel) {
         hangoutsSettings = hangoutRows[0]
         hangoutCards = hangoutRows.slice(1)
@@ -505,7 +507,7 @@ export function useSheetData() {
         console.warn('Failed to save to localStorage:', storageErr)
       }
 
-     
+
     } catch (err) {
       console.warn('⚠ Google Sheets fetch failed, using cached or default data:', err.message)
       setError(err.message)

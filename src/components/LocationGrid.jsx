@@ -1,12 +1,13 @@
 // src/components/LocationGrid.jsx
 import { useState } from 'react'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { ChevronDown, ChevronUp, CalendarDays } from 'lucide-react'
 import AnimatedSection, { StaggerChildren, StaggerItem } from './AnimatedSection'
 
 function DistrictLocationCard({ districtLocation }) {
   const {
     name,
     emoji = '',
+    schedule = '',
     address = '',
     phone = '',
     email = '',
@@ -39,11 +40,17 @@ function DistrictLocationCard({ districtLocation }) {
       </div>
 
       {/* Details */}
-      <div className="space-y-2 pl-0 ">
+      <div className="space-y-2 pl-0">
         {address && (
-          <div className="flex items-start gap-2 ">
-            <span className="text-white text-xs mt-0.5 ">Location: </span>
+          <div className="flex items-start gap-2">
+            <span className="text-white text-xs mt-0.5">Location: </span>
             <p className="text-white/55 text-xs leading-relaxed">{address}</p>
+          </div>
+        )}
+        {schedule && (
+          <div className="flex items-start gap-2">
+            <span className="text-white text-xs">Schedule: </span>
+            <p className="text-white/55 text-xs leading-relaxed">{schedule}</p>
           </div>
         )}
         {phone && (
@@ -153,7 +160,6 @@ function SubLocationSection({ subLocation }) {
   const { name, emoji, byDistrictLocations = [] } = subLocation
   const [isExpanded, setIsExpanded] = useState(false)
 
-  // Legacy fallback: if there are no districts, render the sublocation itself as a card
   if (!byDistrictLocations || byDistrictLocations.length === 0) {
     return (
       <DistrictLocationCard districtLocation={subLocation} />
@@ -218,7 +224,6 @@ function SubRegionSection({ subRegion, isExpanded, onToggle }) {
 
       <div className={`transition-all duration-300 ease-in-out overflow-hidden ${isExpanded ? 'max-h-[9999px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
         <div className="flex flex-col gap-3 pb-2">
-          {/* SubLocations that are just cards */}
           {subRegion.subLocations && subRegion.subLocations.filter(sl => !sl.byDistrictLocations?.length).length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 mb-3">
               {subRegion.subLocations.filter(sl => !sl.byDistrictLocations?.length).map((subLoc, i) => (
@@ -226,13 +231,9 @@ function SubRegionSection({ subRegion, isExpanded, onToggle }) {
               ))}
             </div>
           )}
-
-          {/* SubLocations that act as accordions (dropdowns) */}
           {subRegion.subLocations && subRegion.subLocations.filter(sl => sl.byDistrictLocations?.length > 0).map((subLoc, i) => (
             <SubLocationSection key={`acc-${subLoc.id || i}`} subLocation={subLoc} />
           ))}
-
-          {/* Districts (which are also accordions) */}
           {subRegion.byDistrictLocation && subRegion.byDistrictLocation.length > 0 && (
             <>
               {subRegion.byDistrictLocation.map((district, i) => (
@@ -251,7 +252,7 @@ function LocationModal({ location, isOpen, onClose }) {
 
   if (!isOpen || !location) return null
 
-  const { name, region, emoji = '', gradientFrom = '#1a1a2e', gradientTo = '#302b63', subRegions = [] } = location
+  const { name, region, gradientFrom = '#1a1a2e', gradientTo = '#302b63', subRegions = [] } = location
 
   const toggle = (index) => {
     setExpandedIndex(prev => prev === index ? null : index)
@@ -270,7 +271,6 @@ function LocationModal({ location, isOpen, onClose }) {
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="text-5xl">{emoji}</div>
               <div>
                 <div className="text-feast-red text-sm font-medium uppercase tracking-wider">{region}</div>
                 <h2 className="font-display text-3xl font-black text-white">{name}</h2>
