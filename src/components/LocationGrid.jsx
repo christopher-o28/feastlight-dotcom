@@ -44,8 +44,10 @@ const RESULTS_PER_PAGE = 6
  * that happens to live under a "Manila" parent region.
  */
 function matchesQuery(dl, query) {
-  const q = query.toLowerCase().trim()
+  const q = query.trim()
   if (q.length < 2) return false
+  const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const regex = new RegExp(`\\b${escaped}\\b`, 'gi')
   const ownFields = [
     dl.name,
     dl.address,
@@ -61,7 +63,7 @@ function matchesQuery(dl, query) {
     dl.x,
     dl.threads,
   ]
-  return ownFields.some(f => f && String(f).toLowerCase().includes(q))
+  return ownFields.some(f => f && regex.test(String(f)))
 }
 
 // ─── Highlight helper ────────────────────────────────────────────────────────
@@ -74,11 +76,11 @@ function Highlight({ text, query }) {
   if (!text) return null
   const str = String(text)
   const q = query?.trim()
-  if (!q) return <>{str}</>
+  if (!q || q.length < 2) return <>{str}</>
 
-  // Only highlight the exact query phrase, not individual characters inside words
   const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const regex = new RegExp(escaped, 'gi')
+  // \b ensures we match the whole word only, not substrings inside other words
+  const regex = new RegExp(`\\b${escaped}\\b`, 'gi')
 
   const parts = []
   let lastIndex = 0
@@ -96,7 +98,7 @@ function Highlight({ text, query }) {
     parts.push({ text: str.slice(lastIndex), highlight: false })
   }
 
-  if (parts.length === 0) return <>{str}</>
+  if (parts.length === 0 || parts.every(p => !p.highlight)) return <>{str}</>
 
   return (
     <>
