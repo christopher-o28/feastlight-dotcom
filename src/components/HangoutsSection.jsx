@@ -60,11 +60,11 @@ function HangoutCard({ card }) {
   ]
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-gray-100 flex flex-col
+    <div className="h-full bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-gray-100 flex flex-col
                     transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(255,75,75,0.15)]">
       {/* Image */}
       <div
-        className="w-full aspect-square flex items-center justify-center relative overflow-hidden"
+        className="w-full aspect-square flex items-center justify-center relative overflow-hidden rounded-t-2xl"
         style={{ background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})` }}
       >
         {imageUrl ? (
@@ -99,50 +99,53 @@ function HangoutCard({ card }) {
         <div className="mt-auto pt-4 border-t border-gray-100 flex flex-col gap-2">
 
           {/* Toggle button */}
-          <button
-            onClick={() => allLinks.length > 0 && setShowDownloads(prev => !prev)}
-            disabled={allLinks.length === 0}
-            className={`w-full flex items-center justify-between gap-2 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200
-              ${allLinks.length === 0
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : showDownloads
-                  ? 'bg-red-50 text-feast-red border border-feast-red/30'
-                  : 'bg-feast-red hover:bg-red-600 text-white'
-              }`}
-          >
-            <span className="flex items-center gap-2">
-              <Download size={14} className="shrink-0" />
-              {allLinks.length === 0 ? 'No files' : `Downloads (${allLinks.length})`}
-            </span>
-            {allLinks.length > 0 && (
-              showDownloads
-                ? <ChevronUp size={14} className="shrink-0" />
-                : <ChevronDown size={14} className="shrink-0" />
+          <div className="relative">
+            <button
+              onClick={() => allLinks.length > 0 && setShowDownloads(prev => !prev)}
+              disabled={allLinks.length === 0}
+              className={`w-full flex items-center justify-between gap-2 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200
+                ${allLinks.length === 0
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : showDownloads
+                    ? 'bg-red-50 text-feast-red border border-feast-red/30'
+                    : 'bg-feast-red hover:bg-red-600 text-white'
+                }`}
+            >
+              <span className="flex items-center gap-2">
+                <Download size={14} className="shrink-0" />
+                {allLinks.length === 0 ? 'No files' : `Downloads (${allLinks.length})`}
+              </span>
+              {allLinks.length > 0 && (
+                showDownloads
+                  ? <ChevronUp size={14} className="shrink-0" />
+                  : <ChevronDown size={14} className="shrink-0" />
+              )}
+            </button>
+
+            {/* Expanded download list — floats above layout */}
+            {showDownloads && (
+              <div className="absolute bottom-full left-0 right-0 mb-2 z-20
+                              bg-white border border-feast-red/15 rounded-xl shadow-lg
+                              flex flex-col gap-1 p-2">
+                {allLinks.map(({ label, url, icon }) => (
+                  <a
+                    key={label}
+                    href={url}
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center gap-2 py-2.5 px-4 rounded-xl text-sm font-semibold
+                               border border-feast-red/20 text-feast-red hover:bg-feast-red hover:text-white transition-all duration-200"
+                  >
+                    {icon === 'readMe'
+                      ? <BookOpen size={13} className="shrink-0" />
+                      : <Download size={13} className="shrink-0" />}
+                    <span className="truncate">{label}</span>
+                  </a>
+                ))}
+              </div>
             )}
-          </button>
-
-          {/* Expanded download list */}
-          {showDownloads && (
-            <div className="flex flex-col gap-1.5 pt-1">
-              {allLinks.map(({ label, url, icon }) => (
-                <a
-                  key={label}
-                  href={url}
-                  download
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full flex items-center gap-2 py-2.5 px-4 rounded-xl text-sm font-semibold
-                             border border-feast-red/20 text-feast-red hover:bg-feast-red hover:text-white transition-all duration-200"
-                >
-                  {icon === 'readMe'
-                    ? <BookOpen size={13} className="shrink-0" />
-                    : <Download size={13} className="shrink-0" />}
-                  <span className="truncate">{label}</span>
-                </a>
-
-              ))}
-            </div>
-          )}
+          </div>
 
         </div>
       </div>
@@ -186,10 +189,12 @@ export default function HangoutsSection({ hangouts, hangoutsSettings }) {
           </div>
         </AnimatedSection>
 
-        <StaggerChildren key={currentPage} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StaggerChildren key={currentPage} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
           {pageHangouts.map((card, i) => (
             <StaggerItem key={card.id || (startIdx + i)}>
-              <HangoutCard card={card} />
+              <div className="h-full">
+                <HangoutCard card={card} />
+              </div>
             </StaggerItem>
           ))}
         </StaggerChildren>
