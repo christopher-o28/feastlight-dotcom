@@ -12,8 +12,8 @@
 //    - "Locations"      → location region cards
 //    - "SubRegions"     → sub-region details for each region
 //    - "SubLocations"   → city details for each sub-region
-//    - "Districts"      → district groupings per sub-region  ← NEW
-//    - "DistrictLocations" → locations inside each district  ← NEW
+//    - "Districts"      → district groupings per sub-region
+//    - "DistrictLocations" → locations inside each district
 //    - "Fulltank"       → fulltank video section
 //    - "EquippingSeries"→ equipping section content
 //    - "CTA"            → call-to-action section
@@ -32,7 +32,9 @@
 //    AboutCards:        id | title | body | icon | style (dark|red|light)
 //    LatestSeries:      title | subtitle | body | imageUrl | englishUrl | tagalogUrl
 //    TalkSeries:        id | title | description | tag | imageUrl | trailerUrl | discussionGuideUrl | talkSlidesUrl | qrCodeDiscussionGuide | qrCodeTalkSlides | gradientFrom | gradientTo
-//    Hangouts:          id | title | description | imageUrl | downloadUrl | viewMoreUrl | emoji
+//    Hangouts:          id | title | description | imageUrl | emoji | gradientFrom | gradientTo
+//                       | powerpointUrl | songUrl | videoUrl | fontsUrl | fontsUrl2
+//                       | notesUrl | welcomeNoteUrl | readMeUrl
 //                       (Row 1: sectionLabel | title | body for section header, Rows 2+: hangout card data)
 //    Locations:         id | name | region | emoji | gradientFrom | gradientTo | link
 //    SubRegions:        id | parentLocationId | name | emoji
@@ -93,13 +95,37 @@ function mapPodcastRows(rows) {
   }
 }
 
+// ─── MAP Hangout card row → HangoutCard prop shape ────────────────────────────
+// Add new file URL columns here to automatically include them.
+function mapHangoutCard(row) {
+  return {
+    id:             row.id || row.ID || row.Id || '',
+    title:          row.title || '',
+    description:    row.description || '',
+    imageUrl:       row.imageUrl || row.image || '',
+    emoji:          row.emoji || '',
+    gradientFrom:   row.gradientFrom || '#1a1a2e',
+    gradientTo:     row.gradientTo   || '#302b63',
+    // ── Download file URLs ──────────────────────────────────────────────────
+    powerpointUrl:  row.powerpointUrl  || row.Powerpoint  || '',
+    songUrl:        row.songUrl        || row.Song        || '',
+    videoUrl:       row.videoUrl       || row.Video       || '',
+    fontsUrl:       row.fontsUrl       || row.Fonts       || '',
+    fontsUrl2:      row.fontsUrl2      || row.Fonts2      || row['Fonts 2'] || '',   // ← NEW
+    notesUrl:       row.notesUrl       || row.Notes       || '',
+    welcomeNoteUrl: row.welcomeNoteUrl || row.WelcomeNote || row['Welcome Note'] || '',
+    // ── Read Me URL ──────────────────────────────────────────────────────────
+    readMeUrl:      row.readMeUrl      || row.ReadMe      || row['Read Me'] || '',   // ← NEW
+  }
+}
+
 // ─── SHARED sublocation field mapper ─────────────────────────────────────────
 function mapLocationFields(row, fallbackId) {
   return {
     id: row.id || row.ID || row.Id || fallbackId,
     name: row.name || '',
     emoji: row.emoji || '',
-    schedule: row.schedule || row.Schedule || '',   // ← ADD THIS LINE
+    schedule: row.schedule || row.Schedule || '',
     address: row.address || '',
     phone: row.phone || '',
     email: row.email || row.Email || '',
@@ -154,9 +180,9 @@ export const defaultData = {
     graphicEmoji: '', buildUrl: '#', updateUrl: '#',
   },
   hangouts: [
-    { id: '1', title: 'Worship Night', description: 'An evening of praise, worship, and encountering God\'s presence together as a community.', downloadUrl: '#', viewMoreUrl: '#', emoji: '🎵', gradientFrom: '#1a1a2e', gradientTo: '#302b63' },
-    { id: '2', title: 'Family Feast', description: 'A monthly lunch fellowship where members and their families gather, share meals, and celebrate.', downloadUrl: '#', viewMoreUrl: '#', emoji: '🍽', gradientFrom: '#2d1515', gradientTo: '#6b2020' },
-    { id: '3', title: 'Bible Study Circle', description: 'Dive deeper into Scripture with guided small-group discussions. Grow in wisdom together.', downloadUrl: '#', viewMoreUrl: '#', emoji: '📖', gradientFrom: '#0d2818', gradientTo: '#1a4a2e' },
+    { id: '1', title: 'Worship Night', description: 'An evening of praise, worship, and encountering God\'s presence together as a community.', powerpointUrl: '', songUrl: '', videoUrl: '', fontsUrl: '', fontsUrl2: '', notesUrl: '', welcomeNoteUrl: '', readMeUrl: '', emoji: '🎵', gradientFrom: '#1a1a2e', gradientTo: '#302b63' },
+    { id: '2', title: 'Family Feast', description: 'A monthly lunch fellowship where members and their families gather, share meals, and celebrate.', powerpointUrl: '', songUrl: '', videoUrl: '', fontsUrl: '', fontsUrl2: '', notesUrl: '', welcomeNoteUrl: '', readMeUrl: '', emoji: '🍽', gradientFrom: '#2d1515', gradientTo: '#6b2020' },
+    { id: '3', title: 'Bible Study Circle', description: 'Dive deeper into Scripture with guided small-group discussions. Grow in wisdom together.', powerpointUrl: '', songUrl: '', videoUrl: '', fontsUrl: '', fontsUrl2: '', notesUrl: '', welcomeNoteUrl: '', readMeUrl: '', emoji: '📖', gradientFrom: '#0d2818', gradientTo: '#1a4a2e' },
   ],
   hangoutsSettings: {
     sectionLabel: 'Connect',
@@ -195,138 +221,10 @@ export const defaultData = {
             { id: '1-1-3', name: 'Makati City', emoji: '🏢', address: 'Makati City, Philippines', phone: '+63 2 7777 0000', email: 'makati@feastlight.com' },
           ],
           byDistrictLocation: [
-            { id: '1-1-d1', name: 'Northern District', emoji: '🧭', subLocations: [{ id: '1-1-d1-1', name: 'Caloocan', emoji: '🏘', address: 'Caloocan, Metro Manila', phone: '+63 2 8111 0000', email: 'caloocan@feastlight.com' }, { id: '1-1-d1-2', name: 'Malabon', emoji: '🏘', address: 'Malabon, Metro Manila', phone: '+63 2 8112 0000', email: 'malabon@feastlight.com' }] },
-            { id: '1-1-d2', name: 'Southern District', emoji: '🧭', subLocations: [{ id: '1-1-d2-1', name: 'Pasay', emoji: '🏙', address: 'Pasay, Metro Manila', phone: '+63 2 8333 0000', email: 'pasay@feastlight.com' }, { id: '1-1-d2-2', name: 'Parañaque', emoji: '🏙', address: 'Parañaque, Metro Manila', phone: '+63 2 8334 0000', email: 'paranaque@feastlight.com' }] },
+            { id: '1-1-d1', name: 'Northern District', emoji: '🧭', byDistrictLocations: [{ id: '1-1-d1-1', name: 'Caloocan', emoji: '🏘', address: 'Caloocan, Metro Manila', phone: '+63 2 8111 0000', email: 'caloocan@feastlight.com' }, { id: '1-1-d1-2', name: 'Malabon', emoji: '🏘', address: 'Malabon, Metro Manila', phone: '+63 2 8112 0000', email: 'malabon@feastlight.com' }] },
+            { id: '1-1-d2', name: 'Southern District', emoji: '🧭', byDistrictLocations: [{ id: '1-1-d2-1', name: 'Pasay', emoji: '🏙', address: 'Pasay, Metro Manila', phone: '+63 2 8333 0000', email: 'pasay@feastlight.com' }, { id: '1-1-d2-2', name: 'Parañaque', emoji: '🏙', address: 'Parañaque, Metro Manila', phone: '+63 2 8334 0000', email: 'paranaque@feastlight.com' }] },
           ],
         },
-        {
-          id: '1-2', name: 'Cebu', emoji: '🏝',
-          subLocations: [
-            { id: '1-2-1', name: 'Cebu City', emoji: '🏛', address: 'Cebu City, Philippines', phone: '+63 32 411 0000', email: 'cebucity@feastlight.com' },
-            { id: '1-2-2', name: 'Lapu-Lapu City', emoji: '🌊', address: 'Lapu-Lapu City, Philippines', phone: '+63 32 412 0000', email: 'lapulapu@feastlight.com' },
-          ],
-          byDistrictLocation: [
-            { id: '1-2-d1', name: 'Metro Cebu District', emoji: '🧭', subLocations: [{ id: '1-2-d1-1', name: 'Mandaue', emoji: '🏭', address: 'Mandaue City, Cebu', phone: '+63 32 413 0000', email: 'mandaue@feastlight.com' }, { id: '1-2-d1-2', name: 'Talisay', emoji: '🏘', address: 'Talisay City, Cebu', phone: '+63 32 414 0000', email: 'talisay@feastlight.com' }] },
-          ],
-        },
-        {
-          id: '1-3', name: 'Davao', emoji: '🌴',
-          subLocations: [
-            { id: '1-3-1', name: 'Davao City', emoji: '🌺', address: 'Davao City, Philippines', phone: '+63 82 222 0000', email: 'davaocity@feastlight.com' },
-          ],
-          byDistrictLocation: [
-            { id: '1-3-d1', name: 'Davao del Sur District', emoji: '🧭', subLocations: [{ id: '1-3-d1-1', name: 'Digos', emoji: '🌿', address: 'Digos City, Davao del Sur', phone: '+63 82 223 0000', email: 'digos@feastlight.com' }] },
-          ],
-        },
-      ],
-    },
-    {
-      id: '2', name: 'Asia Pacific', region: 'International', emoji: '🌏',
-      gradientFrom: '#0a1e3c', gradientTo: '#1a3d6b', link: '#',
-      subRegions: [
-        {
-          id: '2-1', name: 'Singapore', emoji: '🏙',
-          subLocations: [{ id: '2-1-1', name: 'Singapore Central', emoji: '🏛', address: 'Singapore', phone: '+65 6200 0000', email: 'singapore@feastlight.com' }],
-          byDistrictLocation: [
-            { id: '2-1-d1', name: 'East District', emoji: '🧭', subLocations: [{ id: '2-1-d1-1', name: 'Tampines', emoji: '🏘', address: 'Tampines, Singapore', phone: '+65 6201 0000', email: 'tampines@feastlight.com' }] },
-            { id: '2-1-d2', name: 'West District', emoji: '🧭', subLocations: [{ id: '2-1-d2-1', name: 'Jurong', emoji: '🏭', address: 'Jurong, Singapore', phone: '+65 6202 0000', email: 'jurong@feastlight.com' }] },
-          ],
-        },
-        {
-          id: '2-2', name: 'Hong Kong', emoji: '🌃',
-          subLocations: [{ id: '2-2-1', name: 'Hong Kong Island', emoji: '🌉', address: 'Hong Kong', phone: '+852 3000 0000', email: 'hongkong@feastlight.com' }],
-          byDistrictLocation: [
-            { id: '2-2-d1', name: 'Kowloon District', emoji: '🧭', subLocations: [{ id: '2-2-d1-1', name: 'Tsim Sha Tsui', emoji: '🏙', address: 'Tsim Sha Tsui, Kowloon', phone: '+852 3001 0000', email: 'tsimshatsui@feastlight.com' }] },
-          ],
-        },
-        {
-          id: '2-3', name: 'Thailand', emoji: '🛕',
-          subLocations: [{ id: '2-3-1', name: 'Bangkok', emoji: '🏛', address: 'Bangkok, Thailand', phone: '+66 2 000 0000', email: 'bangkok@feastlight.com' }],
-          byDistrictLocation: [
-            { id: '2-3-d1', name: 'Central Bangkok District', emoji: '🧭', subLocations: [{ id: '2-3-d1-1', name: 'Silom', emoji: '🏢', address: 'Silom, Bangkok', phone: '+66 2 001 0000', email: 'silom@feastlight.com' }, { id: '2-3-d1-2', name: 'Sukhumvit', emoji: '🌆', address: 'Sukhumvit, Bangkok', phone: '+66 2 002 0000', email: 'sukhumvit@feastlight.com' }] },
-          ],
-        },
-      ],
-    },
-    {
-      id: '3', name: 'Middle East', region: 'International', emoji: '🌙',
-      gradientFrom: '#2d1515', gradientTo: '#6b2020', link: '#',
-      subRegions: [
-        {
-          id: '3-1', name: 'UAE', emoji: '🕌',
-          subLocations: [
-            { id: '3-1-1', name: 'Dubai', emoji: '🏙', address: 'Dubai, UAE', phone: '+971 4 000 0000', email: 'dubai@feastlight.com' },
-            { id: '3-1-2', name: 'Abu Dhabi', emoji: '🏛', address: 'Abu Dhabi, UAE', phone: '+971 2 000 0000', email: 'abudhabi@feastlight.com' },
-          ],
-          byDistrictLocation: [
-            { id: '3-1-d1', name: 'Dubai Districts', emoji: '🧭', subLocations: [{ id: '3-1-d1-1', name: 'Downtown Dubai', emoji: '🏙', address: 'Downtown Dubai, UAE', phone: '+971 4 001 0000', email: 'downtown.dubai@feastlight.com' }, { id: '3-1-d1-2', name: 'Dubai Marina', emoji: '⛵', address: 'Dubai Marina, UAE', phone: '+971 4 002 0000', email: 'dubaimarina@feastlight.com' }] },
-            { id: '3-1-d2', name: 'Abu Dhabi Districts', emoji: '🧭', subLocations: [{ id: '3-1-d2-1', name: 'Al Reem Island', emoji: '🏝', address: 'Al Reem Island, Abu Dhabi', phone: '+971 2 001 0000', email: 'alreem@feastlight.com' }] },
-          ],
-        },
-      ],
-    },
-    {
-      id: '4', name: 'Oceania', region: 'International', emoji: '🌿',
-      gradientFrom: '#0d2818', gradientTo: '#1a4a2e', link: '#',
-      subRegions: [
-        {
-          id: '4-1', name: 'Australia', emoji: '🦘',
-          subLocations: [
-            { id: '4-1-1', name: 'Sydney', emoji: '🏙', address: 'Sydney, Australia', phone: '+61 2 0000 0000', email: 'sydney@feastlight.com' },
-            { id: '4-1-2', name: 'Melbourne', emoji: '🏢', address: 'Melbourne, Australia', phone: '+61 3 0000 0000', email: 'melbourne@feastlight.com' },
-          ],
-          byDistrictLocation: [
-            { id: '4-1-d1', name: 'Sydney Districts', emoji: '🧭', subLocations: [{ id: '4-1-d1-1', name: 'CBD', emoji: '🏙', address: 'Sydney CBD, Australia', phone: '+61 2 0001 0000', email: 'sydneycbd@feastlight.com' }, { id: '4-1-d1-2', name: 'Parramatta', emoji: '🏘', address: 'Parramatta, Sydney', phone: '+61 2 0002 0000', email: 'parramatta@feastlight.com' }] },
-            { id: '4-1-d2', name: 'Melbourne Districts', emoji: '🧭', subLocations: [{ id: '4-1-d2-1', name: 'Southbank', emoji: '🌉', address: 'Southbank, Melbourne', phone: '+61 3 0001 0000', email: 'southbank@feastlight.com' }] },
-          ],
-        },
-        {
-          id: '4-2', name: 'New Zealand', emoji: '🦏',
-          subLocations: [{ id: '4-2-1', name: 'Auckland', emoji: '🏝', address: 'Auckland, New Zealand', phone: '+64 9 000 0000', email: 'auckland@feastlight.com' }],
-          byDistrictLocation: [
-            { id: '4-2-d1', name: 'Auckland Districts', emoji: '🧭', subLocations: [{ id: '4-2-d1-1', name: 'North Shore', emoji: '🌊', address: 'North Shore, Auckland', phone: '+64 9 001 0000', email: 'northshore@feastlight.com' }, { id: '4-2-d1-2', name: 'Manukau', emoji: '🏘', address: 'Manukau, Auckland', phone: '+64 9 002 0000', email: 'manukau@feastlight.com' }] },
-          ],
-        },
-      ],
-    },
-    {
-      id: '5', name: 'USA', region: 'North America', emoji: '🗽',
-      gradientFrom: '#2d2000', gradientTo: '#5a4200', link: '#',
-      subRegions: [
-        {
-          id: '5-1', name: 'California', emoji: '🌞',
-          subLocations: [
-            { id: '5-1-1', name: 'Los Angeles', emoji: '🎥', address: 'Los Angeles, USA', phone: '+1 213 000 0000', email: 'losangeles@feastlight.com' },
-            { id: '5-1-2', name: 'San Francisco', emoji: '🌉', address: 'San Francisco, USA', phone: '+1 415 000 0000', email: 'sanfrancisco@feastlight.com' },
-          ],
-          byDistrictLocation: [
-            { id: '5-1-d1', name: 'LA Districts', emoji: '🧭', subLocations: [{ id: '5-1-d1-1', name: 'Hollywood', emoji: '🎬', address: 'Hollywood, Los Angeles', phone: '+1 213 001 0000', email: 'hollywood@feastlight.com' }, { id: '5-1-d1-2', name: 'Santa Monica', emoji: '🏖', address: 'Santa Monica, Los Angeles', phone: '+1 310 001 0000', email: 'santamonica@feastlight.com' }] },
-            { id: '5-1-d2', name: 'Bay Area Districts', emoji: '🧭', subLocations: [{ id: '5-1-d2-1', name: 'Downtown SF', emoji: '🌁', address: 'Downtown San Francisco', phone: '+1 415 001 0000', email: 'downtownsf@feastlight.com' }] },
-          ],
-        },
-        {
-          id: '5-2', name: 'New York', emoji: '🗽',
-          subLocations: [{ id: '5-2-1', name: 'New York City', emoji: '🏙', address: 'New York, USA', phone: '+1 212 000 0000', email: 'newyork@feastlight.com' }],
-          byDistrictLocation: [
-            { id: '5-2-d1', name: 'NYC Boroughs', emoji: '🧭', subLocations: [{ id: '5-2-d1-1', name: 'Manhattan', emoji: '🏙', address: 'Manhattan, New York', phone: '+1 212 001 0000', email: 'manhattan@feastlight.com' }, { id: '5-2-d1-2', name: 'Brooklyn', emoji: '🌉', address: 'Brooklyn, New York', phone: '+1 718 001 0000', email: 'brooklyn@feastlight.com' }] },
-          ],
-        },
-        {
-          id: '5-3', name: 'Illinois', emoji: '🏙',
-          subLocations: [{ id: '5-3-1', name: 'Chicago', emoji: '🏢', address: 'Chicago, USA', phone: '+1 312 000 0000', email: 'chicago@feastlight.com' }],
-          byDistrictLocation: [
-            { id: '5-3-d1', name: 'Chicago Districts', emoji: '🧭', subLocations: [{ id: '5-3-d1-1', name: 'The Loop', emoji: '🏢', address: 'The Loop, Chicago', phone: '+1 312 001 0000', email: 'theloop@feastlight.com' }, { id: '5-3-d1-2', name: 'Lincoln Park', emoji: '🌳', address: 'Lincoln Park, Chicago', phone: '+1 773 001 0000', email: 'lincolnpark@feastlight.com' }] },
-          ],
-        },
-      ],
-    },
-    {
-      id: '6', name: 'Europe', region: 'International', emoji: '🏰',
-      gradientFrom: '#1e0a3c', gradientTo: '#3d1a6b', link: '#',
-      subRegions: [
-        { id: '6-1', name: 'UK', emoji: '🏰', subLocations: [{ id: '6-1-1', name: 'London', emoji: '🏛', address: 'London, UK', phone: '+44 20 0000 0000', email: 'london@feastlight.com' }], byDistrictLocation: [] },
-        { id: '6-2', name: 'France', emoji: '🗼', subLocations: [{ id: '6-2-1', name: 'Paris', emoji: '🗼', address: 'Paris, France', phone: '+33 1 0000 0000', email: 'paris@feastlight.com' }], byDistrictLocation: [] },
-        { id: '6-3', name: 'Germany', emoji: '🏛', subLocations: [{ id: '6-3-1', name: 'Berlin', emoji: '🏛', address: 'Berlin, Germany', phone: '+49 30 0000 0000', email: 'berlin@feastlight.com' }], byDistrictLocation: [] },
       ],
     },
   ],
@@ -410,10 +308,12 @@ export function useSheetData() {
         hangoutCards = hangoutRows.slice(1)
       }
 
+      // Apply field mapper to each hangout card row
+      const mappedHangoutCards = hangoutCards.map(row => mapHangoutCard(row))
+
       // ── Build hierarchical location data ───────────────────────────────────
       let locations = locationRows?.length ? locationRows : defaultData.locations
 
-      // ↓ FIXED: only requires subRegionRows — subLocations/districts are optional
       if (subRegionRows?.length) {
 
         // 1. Map districtLocations by parentDistrictId
@@ -458,8 +358,7 @@ export function useSheetData() {
           })
         }
 
-        // 4. Map subRegions by parentLocationId,
-        //    attaching subLocations + byDistrictLocation
+        // 4. Map subRegions by parentLocationId
         const subRegionMap = {}
         subRegionRows.forEach((subRegion, i) => {
           const parentId = subRegion.parentLocationId || subRegion.ParentLocationId || subRegion['Parent Location Id'] || ''
@@ -488,7 +387,7 @@ export function useSheetData() {
         latestSeries: latestSeriesRow.title ? latestSeriesRow : defaultData.latestSeries,
         talkSeries: talkRows?.length ? talkRows : defaultData.talkSeries,
         cta: ctaRow.title ? ctaRow : defaultData.cta,
-        hangouts: hangoutCards?.length ? hangoutCards : defaultData.hangouts,
+        hangouts: mappedHangoutCards.length ? mappedHangoutCards : defaultData.hangouts,
         hangoutsSettings: hangoutsSettings,
         equipping: equippingRow.title ? equippingRow : defaultData.equipping,
         fulltank: fulltankRow.youtubeId ? fulltankRow : defaultData.fulltank,
@@ -506,7 +405,6 @@ export function useSheetData() {
       } catch (storageErr) {
         console.warn('Failed to save to localStorage:', storageErr)
       }
-
 
     } catch (err) {
       console.warn('⚠ Google Sheets fetch failed, using cached or default data:', err.message)
