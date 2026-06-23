@@ -33,7 +33,7 @@
 //    LatestSeries:      title | subtitle | body | imageUrl | englishUrl | tagalogUrl
 //    TalkSeries:        id | title | description | tag | imageUrl | trailerUrl | discussionGuideUrl | talkSlidesUrl | qrCodeDiscussionGuide | qrCodeTalkSlides | gradientFrom | gradientTo
 //    Hangouts:          id | title | description | imageUrl | emoji | gradientFrom | gradientTo
-//                       | powerpointUrl | songUrl | videoUrl | fontsUrl | fontsUrl2
+//                       | powerpointUrl | songUrl | songUrl2 | videoUrl | prayerVideoUrl | fontsUrl | fontsUrl2
 //                       | notesUrl | welcomeNoteUrl | readMeUrl
 //                       (Row 1: sectionLabel | title | body for section header, Rows 2+: hangout card data)
 //    Locations:         id | name | region | emoji | gradientFrom | gradientTo | link
@@ -109,13 +109,15 @@ function mapHangoutCard(row) {
     // ── Download file URLs ──────────────────────────────────────────────────
     powerpointUrl:  row.powerpointUrl  || row.Powerpoint  || '',
     songUrl:        row.songUrl        || row.Song        || '',
+    songUrl2:       row.songUrl2       || row.SongUrl2    || row['Song Url 2']      || '',
     videoUrl:       row.videoUrl       || row.Video       || '',
+    prayerVideoUrl: row.prayerVideoUrl || row.PrayerVideoUrl || row['Prayer Video Url'] || '',
     fontsUrl:       row.fontsUrl       || row.Fonts       || '',
-    fontsUrl2:      row.fontsUrl2      || row.Fonts2      || row['Fonts 2'] || '',   // ← NEW
+    fontsUrl2:      row.fontsUrl2      || row.Fonts2      || row['Fonts 2']         || '',
     notesUrl:       row.notesUrl       || row.Notes       || '',
-    welcomeNoteUrl: row.welcomeNoteUrl || row.WelcomeNote || row['Welcome Note'] || '',
+    welcomeNoteUrl: row.welcomeNoteUrl || row.WelcomeNote || row['Welcome Note']    || '',
     // ── Read Me URL ──────────────────────────────────────────────────────────
-    readMeUrl:      row.readMeUrl      || row.ReadMe      || row['Read Me'] || '',   // ← NEW
+    readMeUrl:      row.readMeUrl      || row.ReadMe      || row['Read Me']         || '',
   }
 }
 
@@ -180,9 +182,9 @@ export const defaultData = {
     graphicEmoji: '', buildUrl: '#', updateUrl: '#',
   },
   hangouts: [
-    { id: '1', title: 'Worship Night', description: 'An evening of praise, worship, and encountering God\'s presence together as a community.', powerpointUrl: '', songUrl: '', videoUrl: '', fontsUrl: '', fontsUrl2: '', notesUrl: '', welcomeNoteUrl: '', readMeUrl: '', emoji: '🎵', gradientFrom: '#1a1a2e', gradientTo: '#302b63' },
-    { id: '2', title: 'Family Feast', description: 'A monthly lunch fellowship where members and their families gather, share meals, and celebrate.', powerpointUrl: '', songUrl: '', videoUrl: '', fontsUrl: '', fontsUrl2: '', notesUrl: '', welcomeNoteUrl: '', readMeUrl: '', emoji: '🍽', gradientFrom: '#2d1515', gradientTo: '#6b2020' },
-    { id: '3', title: 'Bible Study Circle', description: 'Dive deeper into Scripture with guided small-group discussions. Grow in wisdom together.', powerpointUrl: '', songUrl: '', videoUrl: '', fontsUrl: '', fontsUrl2: '', notesUrl: '', welcomeNoteUrl: '', readMeUrl: '', emoji: '📖', gradientFrom: '#0d2818', gradientTo: '#1a4a2e' },
+    { id: '1', title: 'Worship Night', description: 'An evening of praise, worship, and encountering God\'s presence together as a community.', powerpointUrl: '', songUrl: '', songUrl2: '', videoUrl: '', prayerVideoUrl: '', fontsUrl: '', fontsUrl2: '', notesUrl: '', welcomeNoteUrl: '', readMeUrl: '', emoji: '🎵', gradientFrom: '#1a1a2e', gradientTo: '#302b63' },
+    { id: '2', title: 'Family Feast', description: 'A monthly lunch fellowship where members and their families gather, share meals, and celebrate.', powerpointUrl: '', songUrl: '', songUrl2: '', videoUrl: '', prayerVideoUrl: '', fontsUrl: '', fontsUrl2: '', notesUrl: '', welcomeNoteUrl: '', readMeUrl: '', emoji: '🍽', gradientFrom: '#2d1515', gradientTo: '#6b2020' },
+    { id: '3', title: 'Bible Study Circle', description: 'Dive deeper into Scripture with guided small-group discussions. Grow in wisdom together.', powerpointUrl: '', songUrl: '', songUrl2: '', videoUrl: '', prayerVideoUrl: '', fontsUrl: '', fontsUrl2: '', notesUrl: '', welcomeNoteUrl: '', readMeUrl: '', emoji: '📖', gradientFrom: '#0d2818', gradientTo: '#1a4a2e' },
   ],
   hangoutsSettings: {
     sectionLabel: 'Connect',

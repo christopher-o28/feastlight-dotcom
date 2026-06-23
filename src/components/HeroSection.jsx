@@ -2,13 +2,36 @@
 import { motion } from 'framer-motion'
 import { HandHeart, Play, ChevronDown } from 'lucide-react'
 
+function getYouTubeId(url) {
+  if (!url) return null
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/)
+  return match ? match[1] : null
+}
+
+function getDriveFileId(url) {
+  if (!url) return null
+  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)
+  return match ? match[1] : null
+}
+
 export default function HeroSection({ settings }) {
   const {
     heroHeadline = 'Light the World with Faith & Hope',
     heroSubtitle = "The Feast Light is a Catholic community gathering where we nourish homes, villages, and hearts with the goodness of God's word.",
-    heroVideoUrl = 'https://feastlight.com/wp-content/uploads/2018/10/Feast-Video-Quick-Start-Bo-Sanchez.mp4',
+    heroVideoUrl = '',
     heroImageUrl = '',
   } = settings || {}
+
+  const youtubeId = getYouTubeId(heroVideoUrl)
+  const driveFileId = !youtubeId ? getDriveFileId(heroVideoUrl) : null
+
+  const youtubeEmbedUrl = youtubeId
+    ? `https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&loop=1&playlist=${youtubeId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&disablekb=1`
+    : null
+
+  const driveEmbedUrl = driveFileId
+    ? `https://drive.google.com/file/d/${driveFileId}/preview`
+    : null
 
   const scrollDown = () => {
     document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' })
@@ -20,7 +43,34 @@ export default function HeroSection({ settings }) {
       className="relative min-h-[90vh] max-h-100px flex items-center overflow-hidden bg-feast-dark"
     >
       {/* Background */}
-      {heroVideoUrl ? (
+      {youtubeEmbedUrl ? (
+        <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+          <iframe
+            src={youtubeEmbedUrl}
+            className="absolute top-1/2 left-1/2 opacity-65"
+            style={{
+              border: 'none',
+              width: '100vw',
+              height: '56.25vw',
+              minHeight: '100vh',
+              minWidth: '177.78vh',
+              transform: 'translate(-50%, -50%)',
+            }}
+            allow="autoplay; encrypted-media"
+            title="Hero background video"
+          />
+          {/* Transparent overlay to block YouTube controls UI */}
+          <div className="absolute inset-0 z-10" />
+        </div>
+      ) : driveEmbedUrl ? (
+        <iframe
+          src={driveEmbedUrl}
+          className="absolute inset-0 w-full h-full opacity-65 pointer-events-none"
+          style={{ border: 'none', transform: 'scale(1.05)' }}
+          allow="autoplay"
+          title="Hero background video"
+        />
+      ) : heroVideoUrl ? (
         <video
           autoPlay muted loop playsInline
           className="absolute inset-0 w-full h-full object-cover opacity-65"
@@ -41,6 +91,7 @@ export default function HeroSection({ settings }) {
         <div className="absolute top-0 left-0 w-1/2 h-full bg-[radial-gradient(circle_at_20%_30%,rgba(255,75,75,0.25),transparent_60%)]" />
         <div className="absolute bottom-0 right-0 w-1/2 h-full bg-[radial-gradient(circle_at_80%_70%,rgba(255,75,75,0.12),transparent_60%)]" />
       </div>
+
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 py-20 w-full">
         <motion.div

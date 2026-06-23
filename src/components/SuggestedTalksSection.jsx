@@ -180,13 +180,43 @@ function QRPlaceholder({ seed, imageUrl }) {
 }
 
 // ─── TalkVideoPlayer ─────────────────────────────────────────────────────────
+// Handles YouTube, Vimeo, Dailymotion (full + dai.ly), Wistia (/medias/ + /s/),
+// Internet Archive (archive.org/details/ID), and direct video files (mp4, webm, ogg, mov).
+
+function getDailymotionId(url) {
+  if (!url) return null
+  // Full URL: dailymotion.com/video/ID or dailymotion.com/embed/video/ID
+  const fullMatch = url.match(/dailymotion\.com\/(?:video\/|embed\/video\/)([a-zA-Z0-9]+)/)
+  if (fullMatch) return fullMatch[1]
+  // Shortened URL: dai.ly/ID
+  const shortMatch = url.match(/dai\.ly\/([a-zA-Z0-9]+)/)
+  if (shortMatch) return shortMatch[1]
+  return null
+}
 
 function getEmbedUrl(url) {
   if (!url) return null
+
+  // YouTube
   const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/)
   if (yt) return `https://www.youtube.com/embed/${yt[1]}?autoplay=1&rel=0`
+
+  // Vimeo
   const vm = url.match(/vimeo\.com\/(\d+)/)
   if (vm) return `https://player.vimeo.com/video/${vm[1]}?autoplay=1`
+
+  // Dailymotion (full + short links)
+  const dmId = getDailymotionId(url)
+  if (dmId) return `https://www.dailymotion.com/embed/video/${dmId}?autoplay=1&ui-logo=0&sharing-enable=0`
+
+  // ── Wistia: account.wistia.com/medias/ID  or  account.wistia.com/s/ID ──
+  const wi = url.match(/wistia\.com\/(?:medias|s)\/([a-zA-Z0-9]+)/)
+  if (wi) return `https://fast.wistia.net/embed/iframe/${wi[1]}?autoplay=1&videoFoam=true`
+
+  // ── Internet Archive: archive.org/details/ID ──
+  const ia = url.match(/archive\.org\/details\/([^/?#]+)/)
+  if (ia) return `https://archive.org/embed/${ia[1]}?autoplay=1`
+
   return null
 }
 
@@ -239,9 +269,13 @@ function TalkVideoPlayer({ url, talkNumber, description, thumbnailUrl }) {
     if (embedUrl) {
       return (
         <div style={{ ...containerStyle, aspectRatio: '16/9' }}>
-          <iframe src={embedUrl} title={talkNumber || 'Talk video'}
-            allow="autoplay; fullscreen; picture-in-picture" allowFullScreen
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }} />
+          <iframe
+            src={embedUrl}
+            title={talkNumber || 'Talk video'}
+            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+            allowFullScreen
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
+          />
         </div>
       )
     }
@@ -982,12 +1016,10 @@ function TalkModal({ card, allCards, onClose, onNavigate, subtalksMap, subtalksL
                                     onMouseEnter={e => e.currentTarget.style.opacity = '0.7'}
                                     onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                                   >
-                                    {/* Icon — mobile only (< 640px) */}
                                     <span className="flex sm:hidden"
                                       style={{ width: 26, height: 26, borderRadius: 6, background: '#fff', color: '#e53e3e', alignItems: 'center', justifyContent: 'center' }}>
                                       <Download size={11} />
                                     </span>
-                                    {/* Text — desktop only (≥ 640px) */}
                                     <span className="hidden sm:inline"
                                       style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,.7)', borderBottom: '1px solid rgba(255,255,255,.25)', paddingBottom: 1, whiteSpace: 'nowrap' }}>
                                       Download Video
@@ -1000,12 +1032,10 @@ function TalkModal({ card, allCards, onClose, onNavigate, subtalksMap, subtalksL
                                     onMouseEnter={e => e.currentTarget.style.opacity = '0.7'}
                                     onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                                   >
-                                    {/* Icon — mobile only */}
                                     <span className="flex sm:hidden"
                                       style={{ width: 26, height: 26, borderRadius: 6, background: '#e53e3e', color: '#fff', alignItems: 'center', justifyContent: 'center' }}>
                                       <FileText size={11} />
                                     </span>
-                                    {/* Text — desktop only */}
                                     <span className="hidden sm:inline"
                                       style={{ fontSize: 11, fontWeight: 600, color: '#e53e3e', borderBottom: '1px solid rgba(229,62,62,.4)', paddingBottom: 1, whiteSpace: 'nowrap' }}>
                                       Download Talk Slide
@@ -1018,12 +1048,10 @@ function TalkModal({ card, allCards, onClose, onNavigate, subtalksMap, subtalksL
                                     onMouseEnter={e => e.currentTarget.style.opacity = '0.7'}
                                     onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                                   >
-                                    {/* Icon — mobile only */}
                                     <span className="flex sm:hidden"
                                       style={{ width: 26, height: 26, borderRadius: 6, background: '#3b82f6', color: '#fff', alignItems: 'center', justifyContent: 'center' }}>
                                       <File size={11} />
                                     </span>
-                                    {/* Text — desktop only */}
                                     <span className="hidden sm:inline"
                                       style={{ fontSize: 11, fontWeight: 600, color: '#60a5fa', borderBottom: '1px solid rgba(96,165,250,.4)', paddingBottom: 1, whiteSpace: 'nowrap' }}>
                                       Download Discussion Guide
@@ -1098,10 +1126,7 @@ function TalkModal({ card, allCards, onClose, onNavigate, subtalksMap, subtalksL
 
 export default function TalksSearchBar({
   talks = [],
-  // Optional: pass a Google Sheets CSV URL to auto-fetch subtalks
-  // e.g. "https://docs.google.com/spreadsheets/d/SHEET_ID/export?format=csv&gid=0"
   subtalkSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTkZi9S2sUa1HkQ6v9PCeZfr0stItscA73BW4t2prGQifg4fFhorLez06Vqu-lTFc016yo3H1wf96PQ/pub?gid=2081298058&single=true&output=csv',
-  // Optional: pass pre-loaded subtalks map { seriesId: [subtalk, ...] }
   initialSubtalksMap = {},
 }) {
   const [query, setQuery] = useState('')
@@ -1111,7 +1136,6 @@ export default function TalksSearchBar({
   const [subtalksMap, setSubtalksMap] = useState(initialSubtalksMap)
   const [subtalksLoading, setSubtalksLoading] = useState(false)
 
-  // Fetch subtalks from Google Sheet on mount (if URL provided)
   useEffect(() => {
     if (!subtalkSheetUrl) return
 
@@ -1124,7 +1148,7 @@ export default function TalksSearchBar({
         const map = {}
         rows.forEach(row => {
           if (!row.seriesId) return
-          const key = String(row.seriesId).trim()   // ← normalize to string
+          const key = String(row.seriesId).trim()
           if (!map[key]) map[key] = []
           map[key].push(row)
         })
@@ -1133,7 +1157,6 @@ export default function TalksSearchBar({
       .catch(err => {
         if (!isMounted) return
         console.error('Subtalks fetch error:', err.message)
-        // Don't clear map on error - keep previous data if available
       })
       .finally(() => {
         if (isMounted) setSubtalksLoading(false)
@@ -1141,8 +1164,6 @@ export default function TalksSearchBar({
 
     return () => { isMounted = false }
   }, [subtalkSheetUrl])
-
-  // 🔍 TEMPORARY DEBUG — remove after fixing
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase()
@@ -1332,7 +1353,6 @@ function TalkCard({ card, query, onClick, subtalkCount = 0 }) {
                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300
                  flex flex-col relative"
     >
-      {/* Subtalk count badge */}
       {subtalkCount > 0 && (
         <div style={{
           position: 'absolute', top: 8, right: 8, zIndex: 10,
@@ -1346,7 +1366,6 @@ function TalkCard({ card, query, onClick, subtalkCount = 0 }) {
         </div>
       )}
 
-      {/* Square image */}
       <div
         className="relative overflow-hidden w-full"
         style={{
@@ -1367,7 +1386,6 @@ function TalkCard({ card, query, onClick, subtalkCount = 0 }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
       </div>
 
-      {/* Body */}
       <div className="p-3 bg-white flex flex-col gap-1.5">
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="inline-block bg-red-50 text-red-500 text-[0.6rem] font-bold tracking-wider uppercase rounded-full px-2.5 py-0.5 shrink-0">

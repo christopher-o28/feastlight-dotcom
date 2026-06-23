@@ -1,98 +1,56 @@
 // src/components/AboutSection.jsx
+import { useEffect, useState } from 'react'
 import AnimatedSection from './AnimatedSection'
 
-const sections = [
-  {
-    id: 1,
-    imageLink: 'https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/01%20The%20FeastLight%20Archives%20/Images%20/What-is-FeastLight.jpg',
-    imageRight: false,
-    content: (
-      <>
-        <p className="text-sm sm:text-base leading-relaxed text-gray-600">
-          <strong className="text-feast-dark">The Feast Light</strong> is a small gathering of friends who want to
-          receive life changing nourishment from the Feast Talk Series.
-        </p>
-        <p className="text-sm sm:text-base leading-relaxed text-gray-500 mt-3">
-          The Feast Light, facilitated by a Planter, a weekly small gathering of people (from 3 or more while
-          observing proper health and safety protocol) either in their homes or workplace, watching and listening
-          to a Feast Talk Video or maybe conducted Online (using the latest Meeting app).
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 2,
-    imageLink: 'https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/01%20The%20FeastLight%20Archives%20/Images%20/Feastlight-Mission.jpg',
-    imageRight: true,
-    content: (
-      <>
-        <p className="text-sm sm:text-base leading-relaxed text-gray-600">
-          <strong className="text-feast-dark">Our Mission</strong> is to empower 1 Million Disciple Makers who can
-          Disciple 1 Million Disciple Makers.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 3,
-    imageLink: 'https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/01%20The%20FeastLight%20Archives%20/Images%20/Vision-Feaslight.jpg',
-    imageRight: false,
-    content: (
-      <>
-        <p className="text-sm sm:text-base leading-relaxed text-gray-600">
-          Together, as a family, the Feast Light shares the same Vision of Light of Jesus by planting 100,000
-          Feasts all throughout the World through Multiplication.
-        </p>
-        <p className="text-sm sm:text-base leading-relaxed text-gray-500 mt-3">
-          And as one, we believe achieving the Vision can be done by strengthening and equipping Planters.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 4,
-    imageLink: 'https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/01%20The%20FeastLight%20Archives%20/Images%20/The-Feast-You-Are-Loved.jpg',
-    imageRight: true,
-    content: (
-      <>
-        <p className="text-sm sm:text-base leading-relaxed text-gray-600">
-          On August 3, 1997, Bro. Bo established The Feast, a Sunday prayer gathering with Holy Mass, lively
-          worship, and series of talks on practical Christian Living.
-        </p>
-        <p className="text-sm sm:text-base leading-relaxed text-gray-500 mt-3">
-          In 2009, Bro. Bo, following leading from the Lord, assigned Feast Builders. Today, there are now over
-          400 Feasts and counting, and the Light of Jesus Family already counts more than 20,000 committed
-          members in the Philippines and more in key areas in Asia, Oceania, Middle East, Canada, United States
-          of America, and the Bahamas.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 5,
-    imageLink: 'https://tfvtalks.s3.dualstack.ap-southeast-1.amazonaws.com/01%20The%20FeastLight%20Archives%20/Images%20/LOJ-TODAY.jpg',
-    imageRight: false,
-    content: (
-      <>
-        <p className="text-sm sm:text-base leading-relaxed text-gray-600">
-          Today, the Light of Jesus Family is organized into three Regions, with each Region autonomous from
-          each other. These are Mega Manila, Provincial and International.
-        </p>
-        <p className="text-sm sm:text-base leading-relaxed text-gray-500 mt-3">
-          Supporting the Chief Presiding Elder (Regional Builder) is a Regional Council, composed of District
-          Builders and Other Builders, appointed by the Regional Builder.
-        </p>
-        <p className="text-sm sm:text-base leading-relaxed text-gray-500 mt-3">
-          Under the regions are Districts that are also autonomous from each other. A District has several live
-          Feasts (headed by a Feast Builder) and Feast Light (headed by a Feast Emissary).
-        </p>
-      </>
-    ),
-  },
-]
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTkZi9S2sUa1HkQ6v9PCeZfr0stItscA73BW4t2prGQifg4fFhorLez06Vqu-lTFc016yo3H1wf96PQ/pub?gid=851635418&single=true&output=csv'
 
-function AboutRow({ section }) {
-  const { imageLink, imageRight, content } = section
+function parseCSV(text) {
+  const rows = []
+  let current = ''
+  let inQuotes = false
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i]
+    if (char === '"') {
+      inQuotes = !inQuotes
+      current += char
+    } else if (char === '\n' && !inQuotes) {
+      rows.push(current)
+      current = ''
+    } else {
+      current += char
+    }
+  }
+  if (current) rows.push(current)
+
+  const parseRow = (line) => {
+    const values = []
+    let val = ''
+    let inQ = false
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '"') {
+        inQ = !inQ
+      } else if (line[i] === ',' && !inQ) {
+        values.push(val.trim())
+        val = ''
+      } else {
+        val += line[i]
+      }
+    }
+    values.push(val.trim())
+    return values
+  }
+
+  const headers = parseRow(rows[0])
+  return rows.slice(1).map(row => {
+    const values = parseRow(row)
+    return headers.reduce((obj, h, i) => ({ ...obj, [h]: values[i] || '' }), {})
+  }).filter(row => row.id && row.id.trim())
+}
+
+function AboutRow({ section, index }) {
+  const { imageLink, title, body } = section
+  const imageRight = index % 2 !== 0
 
   const imageBlock = (
     <div
@@ -103,7 +61,18 @@ function AboutRow({ section }) {
 
   const textBlock = (
     <div className="w-full md:w-1/2 bg-white flex items-center p-8 sm:p-10 lg:p-14 min-h-[260px] sm:min-h-[320px]">
-      <div>{content}</div>
+      <div>
+        {title && (
+          <p className="text-sm sm:text-base leading-relaxed text-gray-600">
+            <strong className="text-feast-dark">{title}</strong>
+          </p>
+        )}
+        {body && body.split('\n').filter(Boolean).map((para, i) => (
+          <p key={i} className="text-sm sm:text-base leading-relaxed text-gray-500 mt-3">
+            {para.trim()}
+          </p>
+        ))}
+      </div>
     </div>
   )
 
@@ -117,7 +86,20 @@ function AboutRow({ section }) {
   )
 }
 
-export default function AboutSection({ cards }) {
+export default function AboutSection() {
+  const [sections, setSections] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch(SHEET_CSV_URL)
+      .then(res => res.text())
+      .then(text => {
+        setSections(parseCSV(text))
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
+
   return (
     <section id="about" className="py-24 px-4 bg-gray-50">
       <div className="max-w-5xl mx-auto">
@@ -127,12 +109,18 @@ export default function AboutSection({ cards }) {
           <div className="section-label text-center text-5xl">Who We Are</div>
         </AnimatedSection>
 
-        {/* Alternating Rows */}
-        <div className="flex flex-col gap-6">
-          {sections.map((section) => (
-            <AboutRow key={section.id} section={section} />
-          ))}
-        </div>
+        {/* Rows */}
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <div className="w-8 h-8 border-4 border-feast-red border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : (
+          <div className="flex flex-col gap-6">
+            {sections.map((section, index) => (
+              <AboutRow key={section.id} section={section} index={index} />
+            ))}
+          </div>
+        )}
 
       </div>
     </section>

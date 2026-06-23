@@ -6,22 +6,17 @@ import AnimatedSection, { StaggerChildren, StaggerItem } from './AnimatedSection
 const FILE_COLUMNS = [
   { key: 'powerpointUrl',  label: 'Powerpoint' },
   { key: 'songUrl',        label: 'Song' },
+  { key: 'songUrl2',       label: 'Song 2' },
   { key: 'videoUrl',       label: 'Video Teaching' },
+  { key: 'prayerVideoUrl', label: 'Prayer Video' },
   { key: 'fontsUrl',       label: 'Fonts' },
   { key: 'fontsUrl2',      label: 'Fonts 2' },
   { key: 'notesUrl',       label: 'Notes for the Facilitator' },
   { key: 'welcomeNoteUrl', label: 'TFV HangOut Welcome Note' },
 ]
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-/**
- * Converts a Google Drive share/view URL to a direct-download URL.
- * Non-Drive URLs are returned as-is.
- */
 function toDirectDownloadUrl(url) {
   if (!url) return url
-  // Match /file/d/{id}/ or id= param
   const match =
     url.match(/\/file\/d\/([^/]+)/) ||
     url.match(/[?&]id=([^&]+)/)
@@ -33,7 +28,7 @@ function toDirectDownloadUrl(url) {
 
 // ─── Card ─────────────────────────────────────────────────────────────────────
 
-function HangoutCard({ card }) {
+function HangoutCard({ card, expandedCardId, setExpandedCardId }) {
   const {
     title,
     imageUrl,
@@ -44,7 +39,8 @@ function HangoutCard({ card }) {
     readMeUrl = '',
   } = card
 
-  const [expanded, setExpanded] = useState(false)
+  const cardId = card.id || card.title
+  const expanded = expandedCardId === cardId
   const [showDownloads, setShowDownloads] = useState(false)
 
   const fileLinks = FILE_COLUMNS
@@ -53,14 +49,13 @@ function HangoutCard({ card }) {
 
   const hasReadMe = readMeUrl && readMeUrl.trim() !== '' && readMeUrl.trim() !== '#'
 
-  // Merge Read Me as the first item in the downloads list
   const allLinks = [
     ...(hasReadMe ? [{ label: 'Read Me', url: toDirectDownloadUrl(readMeUrl), icon: 'readMe' }] : []),
     ...fileLinks,
   ]
 
   return (
-    <div className="h-full bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-gray-100 flex flex-col
+    <div className="h-full bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-gray-100 flex flex-col relative overflow-visible
                     transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(255,75,75,0.15)]">
       {/* Image */}
       <div
@@ -81,24 +76,42 @@ function HangoutCard({ card }) {
         </h4>
 
         {description && (
-          <div className="mb-4">
-            <p className={`text-gray-500 text-sm leading-relaxed transition-all duration-300 whitespace-pre-wrap ${expanded ? '' : 'line-clamp-3'}`}>
+          <div className="mb-4 relative">
+            {/* Collapsed preview — always occupies fixed space */}
+            <p className="text-gray-500 text-sm leading-relaxed line-clamp-3 whitespace-pre-wrap">
               {description}
             </p>
-            <button
-              onClick={() => setExpanded(prev => !prev)}
-              className="mt-1.5 flex items-center gap-1 text-feast-red hover:text-feast-red-dark text-xs font-semibold transition-colors"
-            >
-              <span className="text-base leading-none">{expanded ? '−' : '+'}</span>
-              {expanded ? 'Show less' : 'Show more'}
-            </button>
+
+            {/* Expanded overlay — floats downward, clipped by nothing above */}
+            {expanded && (
+              <div className="absolute top-0 left-0 right-0 z-[45]
+                              bg-white border border-gray-200 rounded-xl shadow-xl p-3 -mx-1 -mt-1"
+                   style={{ backgroundColor: '#ffffff' }}>
+                <p className="text-gray-500 text-sm leading-relaxed whitespace-pre-wrap">
+                  {description}
+                </p>
+                <button
+                  onClick={() => setExpandedCardId(null)}
+                  className="mt-2 flex items-center gap-1 text-feast-red hover:text-red-700 text-xs font-semibold transition-colors"
+                >
+                  <span className="text-base leading-none">−</span> Show less
+                </button>
+              </div>
+            )}
+
+            {!expanded && (
+              <button
+                onClick={() => setExpandedCardId(cardId)}
+                className="mt-1.5 flex items-center gap-1 text-feast-red hover:text-red-700 text-xs font-semibold transition-colors"
+              >
+                <span className="text-base leading-none">+</span> Show more
+              </button>
+            )}
           </div>
         )}
 
         {/* Actions */}
         <div className="mt-auto pt-4 border-t border-gray-100 flex flex-col gap-2">
-
-          {/* Toggle button */}
           <div className="relative">
             <button
               onClick={() => allLinks.length > 0 && setShowDownloads(prev => !prev)}
@@ -122,9 +135,9 @@ function HangoutCard({ card }) {
               )}
             </button>
 
-            {/* Expanded download list — floats above layout */}
+            {/* Download list — floats above layout */}
             {showDownloads && (
-              <div className="absolute bottom-full left-0 right-0 mb-2 z-20
+              <div className="absolute bottom-full left-0 right-0 mb-2 z-[45]
                               bg-white border border-feast-red/15 rounded-xl shadow-lg
                               flex flex-col gap-1 p-2">
                 {allLinks.map(({ label, url, icon }) => (
@@ -146,7 +159,6 @@ function HangoutCard({ card }) {
               </div>
             )}
           </div>
-
         </div>
       </div>
     </div>
@@ -159,6 +171,7 @@ const CARDS_PER_PAGE = 8
 
 export default function HangoutsSection({ hangouts, hangoutsSettings }) {
   const [currentPage, setCurrentPage] = useState(1)
+  const [expandedCardId, setExpandedCardId] = useState(null)
 
   const {
     sectionLabel = 'Connect',
@@ -174,11 +187,12 @@ export default function HangoutsSection({ hangouts, hangoutsSettings }) {
 
   const goToPage = (page) => {
     setCurrentPage(page)
+    setExpandedCardId(null)
     document.getElementById('hangouts')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   return (
-    <section id="hangouts" className="py-24 px-4 bg-gray-50">
+    <section id="hangouts" className="py-24 px-4 bg-gray-50" style={{ isolation: 'auto' }}>
       <div className="max-w-7xl mx-auto">
 
         <AnimatedSection className="mb-12">
@@ -190,13 +204,21 @@ export default function HangoutsSection({ hangouts, hangoutsSettings }) {
         </AnimatedSection>
 
         <StaggerChildren key={currentPage} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
-          {pageHangouts.map((card, i) => (
-            <StaggerItem key={card.id || (startIdx + i)}>
-              <div className="h-full">
-                <HangoutCard card={card} />
-              </div>
-            </StaggerItem>
-          ))}
+          {pageHangouts.map((card, i) => {
+            const cardId = card.id || card.title
+            const isExpanded = expandedCardId === cardId
+            return (
+              <StaggerItem key={card.id || (startIdx + i)}>
+                <div className="h-full" style={{ position: 'relative', zIndex: isExpanded ? 45 : 1 }}>
+                  <HangoutCard
+                    card={card}
+                    expandedCardId={expandedCardId}
+                    setExpandedCardId={setExpandedCardId}
+                  />
+                </div>
+              </StaggerItem>
+            )
+          })}
         </StaggerChildren>
 
         {totalPages > 1 && (
