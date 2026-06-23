@@ -48,37 +48,62 @@ function parseCSV(text) {
   }).filter(row => row.id && row.id.trim())
 }
 
+function renderWithBold(text) {
+  const parts = text.split(/\*\*(.*?)\*\*/g)
+  return parts.map((part, i) =>
+    i % 2 === 1
+      ? <strong key={i} className="text-feast-dark">{part}</strong>
+      : part
+  )
+}
+
 function AboutRow({ section, index }) {
-  const { imageLink, title, body } = section
+  const { imageLink, body } = section
   const imageRight = index % 2 !== 0
+  const [expanded, setExpanded] = useState(false)
+
+  const paragraphs = body ? body.split('\n').filter(Boolean) : []
+  const PREVIEW_COUNT = 2
+  const needsToggle = paragraphs.length > PREVIEW_COUNT
+  const visibleParagraphs = expanded ? paragraphs : paragraphs.slice(0, PREVIEW_COUNT)
 
   const imageBlock = (
-    <div
-      className="w-full md:w-1/2 min-h-[260px] sm:min-h-[320px] bg-contain bg-center bg-no-repeat bg-gray-100"
-      style={{ backgroundImage: `url(${imageLink})` }}
-    />
+    <div className="w-full md:w-1/2 flex-shrink-0">
+      <div
+        className="w-full aspect-square bg-contain bg-center bg-no-repeat bg-gray-100"
+        style={{ backgroundImage: `url(${imageLink})` }}
+      />
+    </div>
   )
 
   const textBlock = (
-    <div className="w-full md:w-1/2 bg-white flex items-center p-8 sm:p-10 lg:p-14 min-h-[260px] sm:min-h-[320px]">
+    <div className="w-full md:w-1/2 flex-shrink-0 bg-white flex flex-col justify-center p-8 sm:p-10 lg:p-14">
       <div>
-        {title && (
-          <p className="text-sm sm:text-base leading-relaxed text-gray-600">
-            <strong className="text-feast-dark">{title}</strong>
-          </p>
-        )}
-        {body && body.split('\n').filter(Boolean).map((para, i) => (
+        {visibleParagraphs.map((para, i) => (
           <p key={i} className="text-sm sm:text-base leading-relaxed text-gray-500 mt-3">
-            {para.trim()}
+            {renderWithBold(para.trim())}
           </p>
         ))}
+
+        {!expanded && needsToggle && (
+          <p className="text-sm text-gray-400 mt-1">...</p>
+        )}
       </div>
+
+      {needsToggle && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="mt-5 self-start text-sm font-semibold text-feast-red hover:underline transition-colors"
+        >
+          {expanded ? 'See Less ↑' : 'See More ↓'}
+        </button>
+      )}
     </div>
   )
 
   return (
     <AnimatedSection>
-      <div className={`flex flex-col ${imageRight ? 'md:flex-row-reverse' : 'md:flex-row'} rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(255,75,75,0.15)]`}>
+      <div className={`flex flex-col ${imageRight ? 'md:flex-row-reverse' : 'md:flex-row'} items-stretch rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(255,75,75,0.15)]`}>
         {imageBlock}
         {textBlock}
       </div>
@@ -101,7 +126,7 @@ export default function AboutSection() {
   }, [])
 
   return (
-    <section id="about" className="py-24 px-4 bg-gray-50">
+    <section id="about" className="py-24 px-4 bg-gray-50 relative z-10 overflow-hidden">
       <div className="max-w-5xl mx-auto">
 
         {/* Header */}
