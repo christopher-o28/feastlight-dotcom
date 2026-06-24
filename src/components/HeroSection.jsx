@@ -14,6 +14,18 @@ function getDriveFileId(url) {
   return match ? match[1] : null
 }
 
+function getVimeoEmbedUrl(url) {
+  if (!url) return null
+  // Matches: vimeo.com/123456789 or vimeo.com/123456789?h=abc or player.vimeo.com/video/123456789?h=abc
+  const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/)
+  if (!match) return null
+  const id = match[1]
+  // Preserve the hash token (h=...) if present — required for private/unlisted videos
+  const hashMatch = url.match(/[?&]h=([a-zA-Z0-9]+)/)
+  const hash = hashMatch ? `&h=${hashMatch[1]}` : ''
+  return `https://player.vimeo.com/video/${id}?autoplay=1&muted=1&loop=1&background=1${hash}`
+}
+
 export default function HeroSection({ settings }) {
   const {
     heroHeadline = 'Light the World with Faith & Hope',
@@ -24,6 +36,7 @@ export default function HeroSection({ settings }) {
 
   const youtubeId = getYouTubeId(heroVideoUrl)
   const driveFileId = !youtubeId ? getDriveFileId(heroVideoUrl) : null
+  const vimeoEmbedUrl = !youtubeId && !driveFileId ? getVimeoEmbedUrl(heroVideoUrl) : null
 
   const youtubeEmbedUrl = youtubeId
     ? `https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&loop=1&playlist=${youtubeId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&disablekb=1`
@@ -59,7 +72,24 @@ export default function HeroSection({ settings }) {
             allow="autoplay; encrypted-media"
             title="Hero background video"
           />
-          {/* Transparent overlay to block YouTube controls UI */}
+          <div className="absolute inset-0 z-10" />
+        </div>
+      ) : vimeoEmbedUrl ? (
+        <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+          <iframe
+            src={vimeoEmbedUrl}
+            className="absolute top-1/2 left-1/2 opacity-65"
+            style={{
+              border: 'none',
+              width: '100vw',
+              height: '56.25vw',
+              minHeight: '100vh',
+              minWidth: '177.78vh',
+              transform: 'translate(-50%, -50%)',
+            }}
+            allow="autoplay; fullscreen; picture-in-picture"
+            title="Hero background video"
+          />
           <div className="absolute inset-0 z-10" />
         </div>
       ) : driveEmbedUrl ? (
