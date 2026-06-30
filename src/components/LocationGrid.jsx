@@ -1,5 +1,5 @@
 // src/components/LocationGrid.jsx
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { ChevronDown, ChevronUp, Search, X, MapPin } from 'lucide-react'
 import AnimatedSection, { StaggerChildren, StaggerItem } from './AnimatedSection'
 
@@ -320,6 +320,23 @@ function SubRegionSection({ subRegion, isExpanded, onToggle }) {
 
 function LocationModal({ location, isOpen, onClose }) {
   const [expandedIndex, setExpandedIndex] = useState(null)
+
+  // Lock the background page scroll while the modal is open.
+  useEffect(() => {
+    if (isOpen) {
+      const scrollY = window.scrollY
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollY}px`
+      document.body.style.width = '100%'
+
+      return () => {
+        document.body.style.position = ''
+        document.body.style.top = ''
+        document.body.style.width = ''
+        window.scrollTo({ top: scrollY, left: 0, behavior: 'instant' })
+      }
+    }
+  }, [isOpen])
 
   if (!isOpen || !location) return null
 
