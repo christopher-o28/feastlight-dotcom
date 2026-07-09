@@ -1,5 +1,5 @@
 // src/components/TopBar.jsx
-import { Facebook, Mail, Youtube, Instagram, Phone } from 'lucide-react'
+import { Facebook, Mail, Youtube, Phone } from 'lucide-react'
 
 export default function TopBar({ settings }) {
   const {
@@ -7,7 +7,6 @@ export default function TopBar({ settings }) {
     email = 'thefeastlight@gmail.com',
     facebookUrl = '#',
     youtubeUrl = '#',
-    instagramUrl = '#',
   } = settings || {}
 
   return (
@@ -37,7 +36,6 @@ export default function TopBar({ settings }) {
           {[
             { href: facebookUrl, Icon: Facebook, label: 'Facebook' },
             { href: youtubeUrl, Icon: Youtube, label: 'YouTube' },
-            { href: instagramUrl, Icon: Instagram, label: 'Instagram' },
             { href: `mailto:${email}`, Icon: Mail, label: 'Email' },
           ].map(({ href, Icon, label }) => (
             <a
