@@ -169,7 +169,7 @@ export default function AboutSection() {
   useEffect(() => {
     fetch(SHEET_CSV_URL)
       .then(res => res.text())
-      .then(text => { setSectio0ns(parseCSV(text)); setLoading(false) })
+      .then(text => { setSections(parseCSV(text)); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
 
