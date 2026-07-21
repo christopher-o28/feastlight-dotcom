@@ -180,38 +180,38 @@ function DistrictLocationCard({ districtLocation, query = '' }) {
         )}
         {facebook && (
           <a href={facebook} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 group/link text-white">
-            <span className="text-xs">Facebook Page: </span>
-            <span className="text-feast-red text-xs hover:text-red-400 transition-colors group-hover/link:underline underline-offset-2 break-all">Facebook Link - Click Me!</span>
+            <span className="text-xs shrink-0">Facebook Page: </span>
+            <span className="text-feast-red text-xs hover:text-red-400 transition-colors group-hover/link:underline underline-offset-2 break-all"><H text={facebook} /></span>
           </a>
         )}
         {website && (
           <a href={website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 group/link">
-            <span className="text-xs text-white">Website Link: </span>
-            <span className="text-feast-red text-xs hover:text-red-400 transition-colors group-hover/link:underline underline-offset-2 break-all">Website Link - Click Me!</span>
+            <span className="text-xs text-white shrink-0">Website Link: </span>
+            <span className="text-feast-red text-xs hover:text-red-400 transition-colors group-hover/link:underline underline-offset-2 break-all"><H text={website} /></span>
           </a>
         )}
         {instagram && (
           <a href={instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 group/link">
-            <span className="text-xs text-white">Instagram Page: </span>
-            <span className="text-feast-red text-xs hover:text-red-400 transition-colors group-hover/link:underline underline-offset-2 break-all">Instagram Link - Click Me!</span>
+            <span className="text-xs text-white shrink-0">Instagram Page: </span>
+            <span className="text-feast-red text-xs hover:text-red-400 transition-colors group-hover/link:underline underline-offset-2 break-all"><H text={instagram} /></span>
           </a>
         )}
         {youtube && (
           <a href={youtube} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 group/link">
-            <span className="text-xs text-white">Youtube Page: </span>
-            <span className="text-feast-red text-xs hover:text-red-400 transition-colors group-hover/link:underline underline-offset-2 break-all">Youtube Link - Click Me!</span>
+            <span className="text-xs text-white shrink-0">Youtube Page: </span>
+            <span className="text-feast-red text-xs hover:text-red-400 transition-colors group-hover/link:underline underline-offset-2 break-all"><H text={youtube} /></span>
           </a>
         )}
         {x && (
           <a href={x} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 group/link">
-            <span className="text-xs text-white">X (Twitter) Page: </span>
-            <span className="text-feast-red text-xs hover:text-red-400 transition-colors group-hover/link:underline underline-offset-2 break-all">X (Twitter) Link - Click Me!</span>
+            <span className="text-xs text-white shrink-0">X (Twitter) Page: </span>
+            <span className="text-feast-red text-xs hover:text-red-400 transition-colors group-hover/link:underline underline-offset-2 break-all"><H text={x} /></span>
           </a>
         )}
         {threads && (
           <a href={threads} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 group/link">
-            <span className="text-xs text-white">Threads Page: </span>
-            <span className="text-feast-red text-xs hover:text-red-400 transition-colors group-hover/link:underline underline-offset-2 break-all">Threads Link - Click Me!</span>
+            <span className="text-xs text-white shrink-0">Threads Page: </span>
+            <span className="text-feast-red text-xs hover:text-red-400 transition-colors group-hover/link:underline underline-offset-2 break-all"><H text={threads} /></span>
           </a>
         )}
         {contactPerson && (
